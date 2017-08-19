@@ -1,0 +1,1 @@
+OBJS:= $(OBJS) arch/$(ARCH)/boot.o
