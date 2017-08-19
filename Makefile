@@ -35,6 +35,10 @@ all: $(OBJS)
 	@echo "AS   $<"
 	${AS} $< -o $@
 
+%.o: %.asm
+	@echo "AS   $<"
+	nasm -felf32 $< -o $@
+
 clean:
 	@echo "RM    OBJS"
 	rm -rf ${OBJS}
