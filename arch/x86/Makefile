@@ -1,1 +1,1 @@
-OBJS:= $(OBJS) arch/$(ARCH)/boot.o
+OBJS:= $(OBJS) arch/$(ARCH)/boot.o arch/$(ARCH)/sys/system.o arch/$(ARCH)/crt/string.o arch/$(ARCH)/vga/vga.o arch/$(ARCH)/sys/isr.o arch/$(ARCH)/sys/gdt.o arch/$(ARCH)/sys/gdts.o arch/$(ARCH)/sys/idt.o arch/$(ARCH)/sys/isrs.o
