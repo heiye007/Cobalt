@@ -1,8 +1,7 @@
 #include <i386/isr.h>
 #include <i386/regs.h>
 
-unsigned char *exception_messages[] =
-{
+uint8_t *exception_messages[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -11,7 +10,6 @@ unsigned char *exception_messages[] =
     "Out of Bounds",
     "Invalid Opcode",
     "No Coprocessor",
-
     "Double Fault",
     "Coprocessor Segment Overrun",
     "Bad TSS",
@@ -20,7 +18,6 @@ unsigned char *exception_messages[] =
     "General Protection Fault",
     "Page Fault",
     "Unknown Interrupt",
-
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
@@ -29,7 +26,6 @@ unsigned char *exception_messages[] =
     "Reserved",
     "Reserved",
     "Reserved",
-
     "Reserved",
     "Reserved",
     "Reserved",
@@ -40,8 +36,7 @@ unsigned char *exception_messages[] =
     "Reserved"
 };
 
-void init_isr()
-{
+void init_isr(void) {
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)isr2, 0x08, 0x8E);
@@ -50,7 +45,6 @@ void init_isr()
     idt_set_gate(5, (unsigned)isr5, 0x08, 0x8E);
     idt_set_gate(6, (unsigned)isr6, 0x08, 0x8E);
     idt_set_gate(7, (unsigned)isr7, 0x08, 0x8E);
-
     idt_set_gate(8, (unsigned)isr8, 0x08, 0x8E);
     idt_set_gate(9, (unsigned)isr9, 0x08, 0x8E);
     idt_set_gate(10, (unsigned)isr10, 0x08, 0x8E);
@@ -59,7 +53,6 @@ void init_isr()
     idt_set_gate(13, (unsigned)isr13, 0x08, 0x8E);
     idt_set_gate(14, (unsigned)isr14, 0x08, 0x8E);
     idt_set_gate(15, (unsigned)isr15, 0x08, 0x8E);
-
     idt_set_gate(16, (unsigned)isr16, 0x08, 0x8E);
     idt_set_gate(17, (unsigned)isr17, 0x08, 0x8E);
     idt_set_gate(18, (unsigned)isr18, 0x08, 0x8E);
@@ -68,7 +61,6 @@ void init_isr()
     idt_set_gate(21, (unsigned)isr21, 0x08, 0x8E);
     idt_set_gate(22, (unsigned)isr22, 0x08, 0x8E);
     idt_set_gate(23, (unsigned)isr23, 0x08, 0x8E);
-
     idt_set_gate(24, (unsigned)isr24, 0x08, 0x8E);
     idt_set_gate(25, (unsigned)isr25, 0x08, 0x8E);
     idt_set_gate(26, (unsigned)isr26, 0x08, 0x8E);
@@ -79,12 +71,10 @@ void init_isr()
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
 }
 
-void fault_handler(struct regs *r)
-{
-    if (r->int_no < 32)
-    {
-        printk(exception_messages[r->int_no]);
-        printk(" Exception. System Halted!\n");
+void fault_handler(struct regs *r) {
+    if (r->int_no < 32) {
+        printf(exception_messages[r->int_no]);
+        printf(" Exception. System Halted!\n");
         for (;;);
     }
 }

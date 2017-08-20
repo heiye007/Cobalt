@@ -2,19 +2,16 @@
 
 int timer_ticks = 0;
 
-void timer_handler(struct regs *r)
-{
+void timer_handler(struct regs *r) {
     timer_ticks++;
 
-    if (timer_ticks % 18 == 0)
-    {
-        printk("One second has passed\n");
+    if (timer_ticks % 18 == 0) {
+        printf("One second has passed\n");
     }
 }
 
-void timer_wait(int ticks)
-{
-    unsigned long eticks;
+void timer_wait(int ticks) {
+    size_t eticks;
 
     eticks = timer_ticks + ticks;
     while(timer_ticks < eticks) 
@@ -23,7 +20,6 @@ void timer_wait(int ticks)
     }
 }
 
-void timer_install()
-{
+void timer_install(void) {
     irq_install_handler(0, timer_handler);
 }
