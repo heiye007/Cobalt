@@ -35,9 +35,6 @@ void memsetw(void *s, signed int c, unsigned long n)
 void* memset(void* s, int c, size_t sz) {
     unsigned char* p = (unsigned char*)s;
 
-    /* c should only be a byte's worth of information anyway, but let's mask out
-     * everything else just in case.
-     */
     unsigned char x = c & 0xff;
 
     while (sz--)
