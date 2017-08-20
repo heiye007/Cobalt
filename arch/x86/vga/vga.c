@@ -1,3 +1,6 @@
+#include <stdarg.h>
+#include <stdint.h>
+
 /* This values are set for 80x25 QEMU mode */
 #define WIDTH 80
 #define ROWS 25
@@ -204,4 +207,48 @@ void printkhex(unsigned int n)
         putch (tmp+'0');
     }
 
+}
+
+void printf(char* fmt, ...)
+{
+    if (fmt) { /* Safety nullcheck */
+        /* The hardest part here is to extract the variadic argument. */
+        va_list list;
+        va_start(list, fmt);
+
+        /* Now it's just parsing fmt until we get a NUL character. */
+        char* ch;
+        for (ch = fmt; *ch; ch++) {
+            if (*ch != '%') { /* Not a placeholder, safe to print? */
+                putch(*ch);
+            } else { /* Uh, oh, hold on. (Get it? Hold... nevermind) */
+                int d_num;
+                unsigned int u_num;
+                char* d_str;
+                ch++;
+                switch (*ch) {
+                    case 'c': // print a character.
+                        d_num = va_arg(list, int);
+                        putch(d_num);
+                        break;
+                    case 'd': // print a number
+                        d_num = va_arg(list, int);
+                        printkdec(d_num);
+                        break;
+                    case 's': // print a string.
+                        d_str = va_arg(list, char*);
+                        printk(d_str);
+                        break;
+                    case 'x':
+                        u_num = va_arg(list, unsigned int);
+                        printkhex(u_num);
+                        break;
+                    default: // unrecognized, what to do?
+                        putch('%');
+                        putch(*ch);
+                        break;
+                }
+            }
+        }
+    }
 }

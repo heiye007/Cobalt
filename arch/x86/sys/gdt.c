@@ -1,35 +1,22 @@
-#include "gdt.h"
+#include <i386/gdt.h>
 
-extern void gdt_flush(uint16_t);
-void init_gdt();
-static void gdt_set_gate(int,uint16_t,uint16_t,unsigned char,unsigned char);
-
-gdt_entry_t gdt_entries[5];
-gdt_ptr_t   gdt_ptr;
+void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
+{
+    gdt[num].base_low = (base & 0xFFFF);
+    gdt[num].base_middle = (base >> 16) & 0xFF;
+    gdt[num].base_high = (base >> 24) & 0xFF;
+    gdt[num].limit_low = (limit & 0xFFFF);
+    gdt[num].granularity = ((limit >> 16) & 0x0F);
+    gdt[num].granularity |= (gran & 0xF0);
+    gdt[num].access = access;
+}
 
 void init_gdt()
 {
-    gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
-    gdt_ptr.base  = (uint16_t)&gdt_entries;
-
+    gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
+    gp.base = &gdt;
     gdt_set_gate(0, 0, 0, 0, 0);
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
-    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
-    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
-
-    gdt_flush((uint16_t)&gdt_ptr);
-}
-
-static void gdt_set_gate(int num, uint16_t base, uint16_t limit, unsigned char access, unsigned char gran)
-{
-    gdt_entries[num].base_low    = (base & 0xFFFF);
-    gdt_entries[num].base_middle = (base >> 16) & 0xFF;
-    gdt_entries[num].base_high   = (base >> 24) & 0xFF;
-
-    gdt_entries[num].limit_low   = (limit & 0xFFFF);
-    gdt_entries[num].granularity = (limit >> 16) & 0x0F;
-    
-    gdt_entries[num].granularity |= gran & 0xF0;
-    gdt_entries[num].access      = access;
+    gdt_flush();
 }
