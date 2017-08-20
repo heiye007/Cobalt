@@ -32,6 +32,37 @@ void move_csr(void) {
     outb(0x3D5, temp);
 }
 
+ void update_cursor(int row, int col)
+ {
+    unsigned short position=(row*80) + col;
+ 
+    // cursor LOW port to vga INDEX register
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (unsigned char)(position&0xFF));
+    // cursor HIGH port to vga INDEX register
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (unsigned char )((position>>8)&0xFF));
+    csr_x = row;
+    csr_y = col;
+    move_csr();
+ }
+
+ void disable_cursor()
+ {
+    outb(0x3D4, 0x0A); // LOW cursor shape port to vga INDEX register
+    outb(0x3D5, 0x3f); //bits 6-7 must be 0 , if bit 5 set the cursor is disable  , bits 0-4 controll the cursor shape .
+ }
+
+// enable the cursor and set the cursor start and end scanlines
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+{
+        outb(0x3D4, 0x0A);
+        outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
+ 
+        outb(0x3D4, 0x0B);
+        outb(0x3D5, (inb(0x3E0) & 0xE0) | cursor_end);
+}
+
 void cls(void) {
 	int i = 0;
 	for (i = 0; i < WIDTH * ROWS; i++)
@@ -77,7 +108,10 @@ void settextcolor(unsigned char forecolor, unsigned char backcolor) {
 }
 
 void init_vga(void) {
+    disable_cursor();
     cls();
+    update_cursor(0, 0);
+    enable_cursor(14, 15);
 }
 
 static void printkint(const int number) {
