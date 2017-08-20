@@ -29,12 +29,9 @@ void init(unsigned long magic, unsigned long addr) {
 	printf("IRQ Set\n");
 	__asm__ __volatile__ ("sti");
 	keyboard_install();
-	printf("> ");
 	while(1);
 	//timer_install();
 	//int i = 10 / 0;
 	//printk(i);
-  //init_timer(50);
-	
+	//init_timer(50);
 }
-

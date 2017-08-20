@@ -32,28 +32,22 @@ void move_csr(void) {
     outb(0x3D5, temp);
 }
 
- void update_cursor(int row, int col)
- {
+void update_cursor(int row, int col) {
     unsigned short position=(row*80) + col;
- 
-    // cursor LOW port to vga INDEX register
     outb(0x3D4, 0x0F);
-    outb(0x3D5, (unsigned char)(position&0xFF));
-    // cursor HIGH port to vga INDEX register
+    outb(0x3D5, (uint8_t)(position&0xFF));
     outb(0x3D4, 0x0E);
-    outb(0x3D5, (unsigned char )((position>>8)&0xFF));
+    outb(0x3D5, (uint8_t)((position>>8)&0xFF));
     csr_x = row;
     csr_y = col;
     move_csr();
- }
+}
 
- void disable_cursor()
- {
-    outb(0x3D4, 0x0A); // LOW cursor shape port to vga INDEX register
-    outb(0x3D5, 0x3f); //bits 6-7 must be 0 , if bit 5 set the cursor is disable  , bits 0-4 controll the cursor shape .
- }
+void disable_cursor(void) {
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, 0x3f);
+}
 
-// enable the cursor and set the cursor start and end scanlines
 void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
 {
         outb(0x3D4, 0x0A);
