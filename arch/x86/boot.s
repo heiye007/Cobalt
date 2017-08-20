@@ -10,22 +10,32 @@
 .long FLAGS
 .long CHECKSUM
 
-.section .bss
+.section .bootstrap_stack, "aw", @nobits
 .align 16
-stack_bottom:
-.skip 16384
-stack_top:
+  stack_bottom:
+  .skip 32768
+  stack_top:
 
 .section .text
+.extern init
+.type init, @function
 .global _start
 .type _start, @function
 _start:
-  mov $stack_top, %esp
 
-  call init
+    mov $stack_top, %esp
 
-  cli
-1:  hlt
-  jmp 1b
+    and $-16, %esp
+    pushl %esp
+    pushl $0
+    popf
+    pushl %ebx
+    pushl %eax
 
-.size _start, . - _start
+    cli
+    call init
+
+    cli
+hang:
+    hlt
+    jmp hang
