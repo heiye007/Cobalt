@@ -97,6 +97,36 @@ void printk(char *text) {
     }
 }
 
+int firstrun = 1;
+int iy;
+
+void backspace(void) {
+    if (firstrun == 1) {
+        firstrun = 0;
+        iy = csr_y;
+    }
+
+    if (firstrun == 0) {
+        if (iy < csr_y) {
+            if (csr_x == 0) {
+                update_cursor(80, csr_y - 1);
+            } else {
+                update_cursor(csr_x - 1, csr_y);
+                printk(" ");
+                update_cursor(csr_x - 1, csr_y);
+            }
+        } else {
+            if (csr_x == 0) {
+                // NOTHING
+            } else {
+                update_cursor(csr_x - 1, csr_y);
+                printk(" ");
+                update_cursor(csr_x - 1, csr_y);
+            }
+        }
+    }
+}
+
 void settextcolor(unsigned char forecolor, unsigned char backcolor) {
     attrib = (backcolor << 4) | (forecolor & 0x0F);
 }
