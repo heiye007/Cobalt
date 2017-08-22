@@ -20,6 +20,6 @@ void timer_wait(int ticks) {
     }
 }
 
-void timer_install(void) {
+void init_timer(void) {
     irq_install_handler(0, timer_handler);
 }
