@@ -48,19 +48,26 @@ void disable_cursor(void) {
     outb(0x3D5, 0x3f);
 }
 
-void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
-{
-        outb(0x3D4, 0x0A);
-        outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
- 
-        outb(0x3D4, 0x0B);
-        outb(0x3D5, (inb(0x3E0) & 0xE0) | cursor_end);
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
+    outb(0x3D4, 0x0B);
+    outb(0x3D5, (inb(0x3E0) & 0xE0) | cursor_end);
 }
 
 void cls(void) {
 	int i = 0;
 	for (i = 0; i < WIDTH * ROWS; i++)
 		textmemptr[i] = (attrib << 8) | 0x20;
+}
+
+void printkok(char *text) {
+    printk("[ ");
+    settextcolor(10, 0);
+    printk("OK");
+    settextcolor(15, 0);
+    printk(" ] ");
+    printf("%s\n", text);
 }
 
 void putch(char c) {
@@ -94,36 +101,6 @@ void printk(char *text) {
     int i;
     for (i = 0; i < strlen(text); i++) {
         putch(text[i]);
-    }
-}
-
-int firstrun = 1;
-int iy;
-
-void backspace(void) {
-    if (firstrun == 1) {
-        firstrun = 0;
-        iy = csr_y;
-    }
-
-    if (firstrun == 0) {
-        if (iy < csr_y) {
-            if (csr_x == 0) {
-                update_cursor(80, csr_y - 1);
-            } else {
-                update_cursor(csr_x - 1, csr_y);
-                printk(" ");
-                update_cursor(csr_x - 1, csr_y);
-            }
-        } else {
-            if (csr_x == 0) {
-                // NOTHING
-            } else {
-                update_cursor(csr_x - 1, csr_y);
-                printk(" ");
-                update_cursor(csr_x - 1, csr_y);
-            }
-        }
     }
 }
 
@@ -213,8 +190,7 @@ static void printkhex(const uint16_t number) {
     }
 }
 
-static void printkuint(const uint16_t number)
-{
+static void printkuint(const uint16_t number) {
     char buf[20];
     buf[0] = 0;
     int len = 0;
@@ -232,8 +208,7 @@ static void printkuint(const uint16_t number)
     }
 }
 
-void printf(char* fmt, ...)
-{
+void printf(char* fmt, ...) {
     if (fmt) {
         va_list list;
         va_start(list, fmt);
