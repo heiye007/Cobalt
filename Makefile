@@ -1,4 +1,4 @@
-ARCH=x86
+ARCH=i386
 KERNEL=kernel.bin
 IMAGE=kernel.iso
 IMAGEDIR = iso
@@ -17,6 +17,7 @@ export i386
 
 include ./arch/$(ARCH)/config.make
 include ./core/Makefile
+include ./usr/Makefile
 include ./arch/$(ARCH)/Makefile
 
 CFLAG:=$(CFLAG) -D__$(ARCH)__
