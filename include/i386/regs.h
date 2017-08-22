@@ -1,7 +1,6 @@
 #include <stdint.h>
 
-struct regs
-{
+struct regs {
     uint16_t gs, fs, es, ds;
     uint16_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
     uint16_t int_no, err_code;
