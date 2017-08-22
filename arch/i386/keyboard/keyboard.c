@@ -1,57 +1,28 @@
 #include <stdint.h>
+#include <types.h>
+#include <keyboard.h>
 
-unsigned char keycode[128] =
-{
-    0, 27, '1', '2', '3', '4', '5', '6', '7', '8',
-    '9', '0', '-', '=', '\b',
-    '\t',
-    'q', 'w', 'e', 'r',
-    't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
-    0,
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
-    '\'', '`', 0,
-    '\\', 'z', 'x', 'c', 'v', 'b', 'n',
-    'm', ',', '.', '/', 0,
-    '*',
-    0,
-    ' ',
-    0,
-    0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    '-',
-    0,
-    0,
-    0,
-    '+',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0, 0, 0,
-    0,
-    0,
-    0,
-};
+int kbd_state = 0;
+char curr_char = NULL;
 
-void kb_handler() {
-    unsigned char scancode = inb(0x60);
+void keyboard_handler(struct regs *r) {
+    uint8_t scancode;
 
-    if (!(scancode & 0x80)) {
-        if (scancode == 0xe) {
-            backspace();
-        } else {
-            putch(keycode[scancode]);
-        }
+    scancode = inb(0x60);
+
+    if (scancode & 0x80) {
+        // Key Release Control
+    } else {
+        curr_char = (keycode[scancode]);
     }
 }
 
-void keyboard_install() {
-    irq_install_handler(1, kb_handler, 0x08, 0x8E);
+char getch() {
+  curr_char = NULL;
+  while(!curr_char) printf("");
+  return curr_char;
+}
+
+void init_keyboard(void) {
+    irq_install_handler(1, keyboard_handler);
 }
