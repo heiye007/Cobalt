@@ -31,6 +31,9 @@ unsigned int shell() {
     arg[i - pos] = '\0';
     if (!strcmp(cmd, "hello")) {
       printf("Hello!\n");
+    } else if (!strcmp(cmd, "panic")) {
+      int a = 0;
+      printf(80/a);
     } else {
       printf("Unknown command: %s\n", cmd);
     }

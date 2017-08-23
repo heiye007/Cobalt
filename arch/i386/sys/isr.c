@@ -1,5 +1,6 @@
 #include <i386/isr.h>
 #include <i386/regs.h>
+#include <panic.h>
 
 uint8_t *exception_messages[] = {
     "Division By Zero",
@@ -73,8 +74,6 @@ void init_isr(void) {
 
 void fault_handler(struct regs *r) {
     if (r->int_no < 32) {
-        printf(exception_messages[r->int_no]);
-        printf(" Exception. System Halted!\n");
-        for (;;);
+        PANIC(exception_messages[r->int_no]);
     }
 }
