@@ -2,19 +2,46 @@
 #include <types.h>
 #include <keyboard.h>
 
+struct SKeys {
+  uint16_t shift : 1;
+} keys;
+
 int kbd_state = 0;
 char curr_char = NULL;
 
 void keyboard_handler(struct regs *r) {
-    uint8_t scancode;
+    uint16_t scancode;
+    uint16_t scancodebuf[5];
+    uint16_t *sc = scancodebuf;
 
-    scancode = inb(0x60);
+    *sc = inb(0x60);
 
-    if (scancode & 0x80) {
-        // Key Release Control
-    } else {
-        curr_char = (keycode[scancode]);
+    if (*sc & 0x80) {
+      switch(*sc) {
+        case 0xaa:
+          keys.shift = 0;
+          break;
+        case 0xb6:
+          keys.shift = 0;
+          break;
+        default:
+          break;
+        }
+      } else {
+      switch(*sc) {
+        case 0x2A:
+          keys.shift = 1;
+          break;
+        case 0x36:
+          keys.shift = 1;
+          break;
+        default:
+          if (keys.shift)
+            curr_char = (keycode[*sc]-0x20);
+          else
+            curr_char = (keycode[*sc]);
     }
+  }
 }
 
 char getch() {
