@@ -1,5 +1,8 @@
 #include <stdarg.h>
 #include <stdint.h>
+#include <vga.h>
+#include <types.h>
+#include <panic.h>
 
 #define WIDTH 80
 #define ROWS 25
@@ -56,9 +59,39 @@ void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
 }
 
 void cls(void) {
+    update_cursor(0, 0);
 	int i = 0;
 	for (i = 0; i < WIDTH * ROWS; i++)
 		textmemptr[i] = (attrib << 8) | 0x20;
+}
+
+void printkcenter(char* c) {
+    int size = 0;
+    while(c[size]) {
+        size++;
+    }
+
+    int half;
+    if(size % 2 != 0) {
+        half = size / 2 -1;
+        for(int i = 0; i < 40 - half - 1; i++) {
+            putch(' ');
+        }
+
+        printf(c);
+        for(int i = 0; i < 40 - half - 2; i++) {
+            putch(' ');
+        }
+    } else {
+        half = size / 2;
+        for(int i = 0; i < 40 - half; i++) {
+            putch(' ');
+        }
+        printf(c);
+        for(int i = 0; i < 40 - half; i++) {
+            putch(' ');
+        }
+    }
 }
 
 void printkok(char *text) {
@@ -251,4 +284,3 @@ void printf(char* fmt, ...) {
             }
         }
     }
-}
