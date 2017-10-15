@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <vga.h>
-#include <i386/regs.h>
+#include <x86/regs.h>
 #include <panic.h>
 
 void panic(char* err, const char *file, uint32_t line) {

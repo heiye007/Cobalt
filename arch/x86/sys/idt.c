@@ -1,4 +1,4 @@
-#include <i386/idt.h>
+#include <x86/idt.h>
 
 void idt_set_gate(uint8_t num, size_t base, unsigned short sel, uint8_t flags) {
     idt[num].base_lo = (base & 0xFFFF);

@@ -1,4 +1,4 @@
-#include <i386/regs.h>
+#include <x86/regs.h>
 
 int timer_ticks = 0;
 

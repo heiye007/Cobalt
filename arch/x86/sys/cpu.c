@@ -1,4 +1,4 @@
-#include <i386/cpu.h>
+#include <x86/cpu.h>
 #include <stdint.h>
 
 void getCPUVendor(void) {

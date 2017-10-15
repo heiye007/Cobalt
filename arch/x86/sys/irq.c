@@ -1,5 +1,5 @@
-#include <i386/irq.h>
-#include <i386/regs.h>
+#include <x86/irq.h>
+#include <x86/regs.h>
 
 void irq_remap(void) {
     outb(0x20, 0x11);
