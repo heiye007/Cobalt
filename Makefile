@@ -1,11 +1,11 @@
-ARCH=i386
+ARCH=x86
 KERNEL=kernel.bin
 IMAGE=kernel.iso
 IMAGEDIR = iso
 BINDIR = ./bin
 INCDIR= -I.
 
-define i386
+define x86
 set timeout=0
 set default=0
 menuentry "Cobalt" {
@@ -13,7 +13,7 @@ menuentry "Cobalt" {
 	boot
 }
 endef
-export i386
+export x86
 
 include ./arch/$(ARCH)/config.make
 include ./core/Makefile
@@ -53,7 +53,7 @@ clean:
 
 iso:
 	-@mkdir -p iso/boot/grub
-	-@echo "$$i386" > iso/boot/grub/grub.cfg
+	-@echo "$$x86" > iso/boot/grub/grub.cfg
 	-@cp ${BINDIR}/${KERNEL} iso/boot/${KERNEL}
 	@echo "ISO  ${IMAGE}"
 	-@grub-mkrescue -o ${IMAGE} ${IMAGEDIR} 2>/dev/null || true
