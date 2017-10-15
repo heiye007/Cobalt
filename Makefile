@@ -1,26 +1,14 @@
-ARCH=x86
 KERNEL=kernel.bin
 IMAGE=kernel.iso
 IMAGEDIR = iso
 BINDIR = ./bin
-INCDIR= -I.
+INCDIR= -Iinclude
 
-define x86
-set timeout=0
-set default=0
-menuentry "Cobalt" {
-	multiboot /boot/kernel.bin
-	boot
-}
-endef
-export x86
-
-include ./arch/$(ARCH)/config.make
+include ./include/cobalt/arch.mk
 include ./core/Makefile
 include ./usr/Makefile
-include ./arch/$(ARCH)/Makefile
 
-CFLAG:=$(CFLAG) -D__$(ARCH)__
+CFLAG:=$(CFLAG) -D$(ARCH)
 
 all: $(OBJS)
 	@echo "LD   $(KERNEL)"
@@ -53,7 +41,7 @@ clean:
 
 iso:
 	-@mkdir -p iso/boot/grub
-	-@echo "$$x86" > iso/boot/grub/grub.cfg
+	-@echo $(CPUARCH) > iso/boot/grub/grub.cfg
 	-@cp ${BINDIR}/${KERNEL} iso/boot/${KERNEL}
 	@echo "ISO  ${IMAGE}"
 	-@grub-mkrescue -o ${IMAGE} ${IMAGEDIR} 2>/dev/null || true
