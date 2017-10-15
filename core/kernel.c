@@ -1,4 +1,6 @@
-#include <i386/isr.h>
+#ifdef x86
+#include <x86/isr.h>
+#endif
 #include <multiboot.h>
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
