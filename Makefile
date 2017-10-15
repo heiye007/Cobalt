@@ -24,17 +24,17 @@ CFLAG:=$(CFLAG) -D__$(ARCH)__
 
 all: $(OBJS)
 	@echo "LD   $(KERNEL)"
-	${GCC} ${LDFLAG}
+	${CROSS_COMPILE}gcc ${LDFLAG}
 	mv ${OBJS} ${BINDIR}/objs
 	mv ${KERNEL} ${BINDIR}
 
 %.o: %.c
 	@echo "CC   $<"
-	${GCC} ${CFLAG} ${INCDIR} -c $< -o $@
+	${CROSS_COMPILE}gcc ${CFLAG} ${INCDIR} -c $< -o $@
 
 %.o: %.s
 	@echo "AS   $<"
-	${AS} $< -o $@
+	${CROSS_COMPILE}as $< -o $@
 
 %.o: %.asm
 	@echo "AS   $<"
