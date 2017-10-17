@@ -201,12 +201,12 @@ void printkdec(uint16_t n) {
     printk(c2);
 }
 
-static char hex_letters[] = {
+char hex_letters[] = {
     '0', '1', '2', '3', '4', '5', '6', '7',
     '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
 };
 
-static void printkhex(const uint16_t number) {
+void printkhex(const uint16_t number) {
     char buf[20];
     buf[0] = 0;
     int len = 0;
@@ -223,7 +223,7 @@ static void printkhex(const uint16_t number) {
     }
 }
 
-static void printkuint(const uint16_t number) {
+void printkuint(const uint16_t number) {
     char buf[20];
     buf[0] = 0;
     int len = 0;
