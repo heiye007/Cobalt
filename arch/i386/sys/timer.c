@@ -5,9 +5,11 @@ int timer_ticks = 0;
 void timer_handler(struct regs *r) {
     timer_ticks++;
 
+#ifdef DBG_i386_TIMER
     if (timer_ticks % 18 == 0) {
         printf("One second has passed\n");
     }
+#endif
 }
 
 void timer_wait(int ticks) {
