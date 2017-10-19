@@ -10,9 +10,23 @@ include ./usr/Makefile
 
 CFLAG:=$(CFLAG) -D$(ARCH)
 
-all: clean compile iso run
-debug: clean compile iso run clean
-kernel: clean compile iso
+all:
+	make clean
+	make compile
+	make iso
+	make run
+	
+debug:
+	make clean
+	make compile
+	make iso
+	make run
+	make clean
+
+kernel: 
+	make clean
+	make compile
+	make iso
 
 compile: $(OBJS)
 	@echo "LD   $(KERNEL)"
