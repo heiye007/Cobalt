@@ -10,7 +10,9 @@ include ./usr/Makefile
 
 CFLAG:=$(CFLAG) -D$(ARCH)
 
-all: $(OBJS)
+all: clean compile iso run
+
+compile: $(OBJS)
 	@echo "LD   $(KERNEL)"
 	${CROSS_COMPILE}gcc ${LDFLAG}
 	mv ${OBJS} ${BINDIR}/objs
