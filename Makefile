@@ -26,7 +26,12 @@ all: $(OBJS)
 
 %.o: %.asm
 	@echo "AS   $<"
+
+ifeq (${ARCH},i386)
 	nasm -felf32 $< -o $@
+else
+	nasm -fbin $< -o $@
+endif
 
 clean:
 	@echo "RM    OBJS"
