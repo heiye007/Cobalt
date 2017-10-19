@@ -13,7 +13,7 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	getCPUArch();
 	getCPUName();
 #endif
-	
+
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
 		printf("Invalid magic number: 0x%x\n", (unsigned) magic);
 		return;
@@ -42,5 +42,4 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 #endif
 	shell();
 	while(1);
-	//init_timer(50);
 }
