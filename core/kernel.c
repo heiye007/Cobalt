@@ -1,5 +1,5 @@
-#ifdef x86
-#include <x86/isr.h>
+#ifdef i386
+#include <i386/isr.h>
 #endif
 #include <multiboot.h>
 

@@ -1,4 +1,4 @@
-#include <x86/gdt.h>
+#include <i386/gdt.h>
 
 void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gran) {
     gdt[num].base_low = (base & 0xFFFF);
