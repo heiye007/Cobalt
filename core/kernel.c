@@ -24,6 +24,7 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	//detectCPU();
 #ifdef i386
 	init_paging(mbi);
+	printkok("Initialized Paging");
 #endif
 	printkok("Initialized Keyboard");
 	init_keyboard();
