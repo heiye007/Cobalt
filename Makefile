@@ -46,4 +46,7 @@ iso:
 	@echo "ISO  ${IMAGE}"
 	-@grub-mkrescue -o ${IMAGE} ${IMAGEDIR} 2>/dev/null || true
 
+run:
+	qemu-system-${ARCH} -cdrom kernel.iso
+
 $(V).SILENT:
