@@ -1,4 +1,4 @@
-ifeq ($(ARCH), x86)
+ifeq ($(ARCH), i386)
 include ./arch/$(ARCH)/config.make
 include ./arch/$(ARCH)/Makefile
 CPUARCH = '\
