@@ -27,7 +27,7 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	init_irq();
 	printkok("Initialized IRQ's");
 	__asm__ __volatile__ ("sti");
-	//init_timer();
+	init_timer();
 
 #ifdef i386
 	init_paging(mbi);
