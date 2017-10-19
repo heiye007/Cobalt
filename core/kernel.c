@@ -27,9 +27,12 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 #endif
 	printkok("Initialized Keyboard");
 	init_keyboard();
+#ifdef DBG_EXCEPTION
+	/* On any kind of CPU, a division by zero should fire up an interrupt */
+	int i = 10 / 0;
+	printk(i);
+#endif
 	shell();
 	while(1);
-	//int i = 10 / 0;
-	//printk(i);
 	//init_timer(50);
 }
