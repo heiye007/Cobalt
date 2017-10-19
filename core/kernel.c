@@ -30,8 +30,8 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	init_timer();
 
 #ifdef i386
-	init_paging(mbi);
-	printkok("Initialized Paging");
+	frame_init(mbi);
+	printkok("Initialized Frames");
 #endif
 	printkok("Initialized Keyboard");
 	init_keyboard();

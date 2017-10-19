@@ -56,7 +56,7 @@ int frame_first_free()
     return -1;
 }
 
-void init_paging(multiboot_info_t* multiboot_ptr)
+void frame_init(multiboot_info_t* multiboot_ptr)
 {
 	unsigned int memory_size = count_memory(multiboot_ptr);
 	unsigned int frames = memory_size / 4;
