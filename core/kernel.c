@@ -7,6 +7,13 @@
 
 void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	init_vga();
+#ifdef DBG_CPU
+	getCPUVendor();
+	getCPUFeatures();
+	getCPUArch();
+	getCPUName();
+#endif
+	
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
 		printf("Invalid magic number: 0x%x\n", (unsigned) magic);
 		return;
@@ -21,7 +28,7 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	printkok("Initialized IRQ's");
 	__asm__ __volatile__ ("sti");
 	//init_timer();
-	//detectCPU();
+
 #ifdef i386
 	init_paging(mbi);
 	printkok("Initialized Paging");
