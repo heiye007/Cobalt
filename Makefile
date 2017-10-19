@@ -11,6 +11,7 @@ include ./usr/Makefile
 CFLAG:=$(CFLAG) -D$(ARCH)
 
 all: clean compile iso run
+debug: clean compile iso run clean
 kernel: clean compile iso
 
 compile: $(OBJS)
