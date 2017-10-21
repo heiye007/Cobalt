@@ -39,5 +39,9 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	init_keyboard();
 	printkok("Initialized Keyboard");
 	shell();
+
+	/* XXX: Kernel can't reach this zone,
+	if it does, throw a Kernel Panic Error */
+	panic("Reached Kernel End!");
 	while(1);
 }
