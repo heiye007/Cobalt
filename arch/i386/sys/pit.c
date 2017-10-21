@@ -1,11 +1,6 @@
 #include <stdint.h>
 #include <i386/pit.h>
 
-void send_eoi(uint8_t irq)
-{
-    pic_send_eoi(irq);
-}
-
 void pit_irq()
 {
     asm volatile("add $0x1c, %esp");
