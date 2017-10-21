@@ -4,8 +4,8 @@ IMAGEDIR = iso
 BINDIR = ./bin
 INCDIR= -Iinclude
 
-include ./include/cobalt/arch.mk
 include ./core/Makefile
+include ./include/cobalt/arch.mk
 include ./usr/Makefile
 
 CFLAG:=$(CFLAG) -D$(ARCH)
