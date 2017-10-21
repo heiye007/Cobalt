@@ -33,8 +33,8 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	frame_init(mbi);
 	printkok("Initialized Frames");
 #endif
-	printkok("Initialized Keyboard");
 	init_keyboard();
+	printkok("Initialized Keyboard");
 	shell();
 	while(1);
 }
