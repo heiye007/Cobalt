@@ -27,7 +27,8 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	init_irq();
 	printkok("Initialized IRQ's");
 	__asm__ __volatile__ ("sti");
-	init_timer();
+	pic_init();
+	pit_init();
 
 #ifdef i386
 	frame_init(mbi);
