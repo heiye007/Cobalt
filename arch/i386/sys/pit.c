@@ -5,7 +5,7 @@ void pit_irq()
 {
     asm volatile("add $0x1c, %esp");
     asm volatile("pusha");
-    send_eoi(0);
+    pic_send_eoi(0);
     asm volatile("popa");
     asm volatile("iret");
 }
