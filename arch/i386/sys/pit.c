@@ -1,8 +1,7 @@
 #include <stdint.h>
 #include <i386/pit.h>
 
-void pit_irq()
-{
+void pit_irq(void) {
     asm volatile("add $0x1c, %esp");
     asm volatile("pusha");
     pic_send_eoi(0);
@@ -10,13 +9,11 @@ void pit_irq()
     asm volatile("iret");
 }
 
-static inline void __pit_send_cmd(uint8_t cmd)
-{
+static inline void __pit_send_cmd(uint8_t cmd) {
     outb(PIT_REG_COMMAND, cmd);
 }
 
-static inline void __pit_send_data(uint16_t data, uint8_t counter)
-{
+static inline void __pit_send_data(uint16_t data, uint8_t counter){
     uint8_t port = (counter==PIT_OCW_COUNTER_0) ? PIT_REG_COUNTER0 :
         ((counter==PIT_OCW_COUNTER_1) ? PIT_REG_COUNTER1 : PIT_REG_COUNTER2);
 
@@ -24,11 +21,10 @@ static inline void __pit_send_data(uint16_t data, uint8_t counter)
 }
 
 static inline uint8_t __pit_read_data (uint16_t counter) {
-
     uint8_t port = (counter==PIT_OCW_COUNTER_0) ? PIT_REG_COUNTER0 :
         ((counter==PIT_OCW_COUNTER_1) ? PIT_REG_COUNTER1 : PIT_REG_COUNTER2);
 
-    return inportb (port);
+    return inb(port);
 }
 
 static void pit_start_counter (uint32_t freq, uint8_t counter, uint8_t mode) {
@@ -46,8 +42,7 @@ static void pit_start_counter (uint32_t freq, uint8_t counter, uint8_t mode) {
     __pit_send_data ((divisor >> 8) & 0xff, 0);
 }
 
-void pit_init()
-{
+void pit_init(void) {
 #ifdef DBG_PIC
     printk("Starting PIC initialization...\n");
 #endif

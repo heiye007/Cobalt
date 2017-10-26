@@ -4,7 +4,6 @@
 #include <panic.h>
 
 void panic(char* err, const char *file, uint32_t line) {
-	
 	struct regs* r;
 	disable_cursor();
 	settextcolor(CYAN, BLUE);

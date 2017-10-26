@@ -44,7 +44,7 @@ void keyboard_handler(struct regs *r) {
   }
 }
 
-char getch() {
+char getch(void) {
   curr_char = NULL;
   while(!curr_char) printf("");
   return curr_char;

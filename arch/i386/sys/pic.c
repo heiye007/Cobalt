@@ -1,8 +1,7 @@
 #include <stdint.h>
 #include <i386/pic.h>
 
-void pic_init()
-{
+void pic_init(void) {
 #ifdef DBG_PIT
     printk("Starting PIT initialization...\n");
 #endif
@@ -21,8 +20,7 @@ void pic_init()
 #endif
 }
 
-void pic_send_eoi(uint8_t irq)
-{
+void pic_send_eoi(uint8_t irq) {
     if(irq >= 8)
         outb(PIC_SLAVE_CMD, PIC_CMD_EOI);
     outb(PIC_MASTER_CMD, PIC_CMD_EOI);

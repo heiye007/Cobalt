@@ -2,6 +2,7 @@
 #include <i386/isr.h>
 #endif
 #include <multiboot.h>
+#include <panic.h>
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
@@ -31,17 +32,12 @@ void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
 	printkok("Initialized PIC");
 	pit_init();
 	printkok("Initialized PIT");
-
-#ifdef i386
-	frame_init(mbi);
-	printkok("Initialized Frames");
-#endif
 	init_keyboard();
 	printkok("Initialized Keyboard");
 	shell();
 
 	/* XXX: Kernel can't reach this zone,
 	if it does, throw a Kernel Panic Error */
-	panic("Reached Kernel End!");
+	PANIC("Reached Kernel End!");
 	while(1);
 }
