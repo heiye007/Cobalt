@@ -28,10 +28,12 @@ static inline uint8_t __pit_read_data (uint16_t counter) {
 }
 
 static void pit_start_counter (uint32_t freq, uint8_t counter, uint8_t mode) {
-
-    if (freq==0)
+    if (freq==0) {
         return;
+    }
+#ifdef DBG_PIT
     printf("Starting counter %d with frequency %dHz\n", counter/0x40, freq);
+#endif
     uint16_t divisor = (uint16_t)( 1193181 / (uint16_t)freq);
     uint8_t ocw = 0;
     ocw = (ocw & ~PIT_OCW_MASK_MODE) | mode;
@@ -43,12 +45,12 @@ static void pit_start_counter (uint32_t freq, uint8_t counter, uint8_t mode) {
 }
 
 void pit_init(void) {
-#ifdef DBG_PIC
-    printk("Starting PIC initialization...\n");
+#ifdef DBG_PIT
+    printk("Starting PIT initialization...\n");
 #endif
     irq_install_handler(32, (uint32_t)pit_irq);
     pit_start_counter (200,PIT_OCW_COUNTER_0, PIT_OCW_MODE_SQUAREWAVEGEN);
-#ifdef DBG_PIC
-    printk("Started PIC successfully...\n");
+#ifdef DBG_PIT
+    printk("Started PIT successfully...\n");
 #endif
 }
