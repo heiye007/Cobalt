@@ -17,6 +17,8 @@ void init(unsigned long magic, multiboot_info_t *mbi) {
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
 		printf("Invalid magic number: 0x%x\n", (unsigned) magic);
+		__asm__ __volatile__ ("cli");
+		__asm__ __volatile__ ("hlt");
 		return;
 	}
 	init_gdt();
