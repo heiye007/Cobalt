@@ -24,6 +24,7 @@ SECTIONS
     {
         *(COMMON)
         *(.bss)
+        *(.bootstrap_stack)
     }
     kernel_end = .;
 }
