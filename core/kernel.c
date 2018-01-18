@@ -6,7 +6,7 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-void init(unsigned long magic, unsigned long addr, multiboot_info_t *mbi) {
+void init(unsigned long magic, multiboot_info_t *mbi) {
 	init_vga();
 #ifdef DBG_CPU
 	getCPUVendor();
