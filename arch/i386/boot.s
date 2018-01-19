@@ -13,7 +13,7 @@
 .section .bootstrap_stack, "aw", @nobits
 .align 16
   stack_bottom:
-  .skip 32768
+  .skip 16384
   stack_top:
 
 .section .text
@@ -39,3 +39,7 @@ _start:
 hang:
     hlt
     jmp hang
+
+.section .kend
+.global end_of_kernel
+end_of_kernel:
