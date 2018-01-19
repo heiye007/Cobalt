@@ -26,5 +26,11 @@ SECTIONS
         *(.bss)
         *(.bootstrap_stack)
     }
+
+    .kend BLOCK(4K) : ALIGN(4K)
+    {
+        *(.kend)
+    }
+    
     kernel_end = .;
 }
