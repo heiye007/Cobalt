@@ -1,6 +1,4 @@
-#ifdef i386
 #include <i386/isr.h>
-#endif
 #include <multiboot.h>
 #include <panic.h>
 
@@ -9,7 +7,8 @@
 extern uint32_t kernel_end;
 extern uint32_t kernel_start;
 
-void init(unsigned long magic, multiboot_info_t *mbi) {
+void init(unsigned long magic, multiboot_info_t *mbi)
+{
 	init_vga();
 
 #ifdef DBG_CPU
@@ -24,7 +23,8 @@ void init(unsigned long magic, multiboot_info_t *mbi) {
 
     uint32_t total_frames = high_pages + low_pages;
 
-	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
+	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
+	{
 		printf("Invalid magic number: 0x%x\n", (unsigned) magic);
 		__asm__ __volatile__ ("cli");
 		__asm__ __volatile__ ("hlt");
@@ -34,7 +34,9 @@ void init(unsigned long magic, multiboot_info_t *mbi) {
 	printf("Kernel base is %x, end is %x\n", &kernel_start, &kernel_end);
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
-    while(mmap < mbi->mmap_addr + mbi->mmap_length) {
+
+    while(mmap < mbi->mmap_addr + mbi->mmap_length)
+    {
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
