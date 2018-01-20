@@ -1,7 +1,8 @@
 #include <i386/irq.h>
 #include <i386/regs.h>
 
-void irq_remap(void) {
+void irq_remap(void)
+{
     outb(0x20, 0x11);
     outb(0xA0, 0x11);
     outb(0x21, 0x20);
@@ -14,7 +15,8 @@ void irq_remap(void) {
     outb(0xA1, 0x0);
 }
 
-void init_irq(void) {
+void init_irq(void)
+{
     irq_remap();
     idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);
     idt_set_gate(33, (unsigned)irq1, 0x08, 0x8E);
@@ -34,15 +36,19 @@ void init_irq(void) {
     idt_set_gate(47, (unsigned)irq15, 0x08, 0x8E);
 }
 
-void irq_handler(struct regs *r) {
+void irq_handler(struct regs *r)
+{
     void (*handler)(struct regs *r);
 
     handler = irq_routines[r->int_no - 32];
-    if (handler) {
+
+    if (handler)
+    {
         handler(r);
     }
 
-    if (r->int_no >= 40) {
+    if (r->int_no >= 40)
+    {
         outb(0xA0, 0x20);
     }
 
