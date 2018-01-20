@@ -31,7 +31,9 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 		return;
 	}
 
+#ifdef DBG_INIT
 	printf("Kernel base is %x, end is %x\n", &kernel_start, &kernel_end);
+#endif
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
 
@@ -40,8 +42,10 @@ void init(unsigned long magic, multiboot_info_t *mbi)
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
+#ifdef DBG_INIT
     printf("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
     printf("PAGING size: %d \n",  high_pages);
+#endif
 
 	init_gdt();
 	printkok("Initialized GDT");
@@ -50,10 +54,13 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	init_isr();
 	printkok("Initialized ISR's");
 	initialize_paging(total_frames, 0, 0);
+	printkok("Initialized Paging");
 	malloc_stats();
+	printkok("Initialized Memory Management Engine");
 	init_irq();
 	printkok("Initialized IRQ's");
 	__asm__ __volatile__ ("sti");
+	printkok("Interrupts enabled");
 	pic_init();
 	printkok("Initialized PIC");
 	pit_init();
@@ -64,6 +71,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	/* XXX: Legacy Paging Tester
 	unsigned int *ptr = (unsigned int*)0xA0000000;
    	unsigned int do_page_fault = *ptr;*/
+
 	shell();
 
 	/* XXX: Kernel can't reach this zone,
