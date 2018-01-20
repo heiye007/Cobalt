@@ -4,7 +4,6 @@ IMAGEDIR = iso
 BINDIR = ./bin
 INCDIR= -Iinclude
 
-include ./core/Makefile
 include ./include/cobalt/arch.mk
 include ./usr/Makefile
 

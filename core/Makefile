@@ -1,1 +1,0 @@
-OBJS:= $(OBJS) core/kernel.o
