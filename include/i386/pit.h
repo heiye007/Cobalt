@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define PIT_REG_COUNTER0 0x40
 #define PIT_REG_COUNTER1 0x41
 #define PIT_REG_COUNTER2 0x42
@@ -21,7 +23,5 @@
 #define PIT_OCW_COUNTER_0 0
 #define PIT_OCW_COUNTER_1 0x40
 #define PIT_OCW_COUNTER_2 0x80
-
-#include <stdint.h>
 
 extern void pit_init();
