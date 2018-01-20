@@ -1,6 +1,6 @@
+#include <keyboard.h>
 #include <stdint.h>
 #include <types.h>
-#include <keyboard.h>
 
 struct SKeys {
   uint16_t shift : 1;
