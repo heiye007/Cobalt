@@ -2,22 +2,26 @@
 #include <stdint.h>
 #include <types.h>
 
-struct SKeys {
+struct SKeys
+{
   uint16_t shift : 1;
 } keys;
 
 int kbd_state = 0;
 char curr_char = NULL;
 
-void keyboard_handler(struct regs *r) {
+void keyboard_handler(struct regs *r)
+{
     uint16_t scancode;
     uint16_t scancodebuf[5];
     uint16_t *sc = scancodebuf;
 
     *sc = inb(0x60);
 
-    if (*sc & 0x80) {
-      switch(*sc) {
+    if (*sc & 0x80)
+    {
+      switch(*sc)
+      {
         case 0xaa:
           keys.shift = 0;
           break;
@@ -28,7 +32,8 @@ void keyboard_handler(struct regs *r) {
           break;
         }
       } else {
-      switch(*sc) {
+      switch(*sc)
+      {
         case 0x2A:
           keys.shift = 1;
           break;
@@ -44,12 +49,14 @@ void keyboard_handler(struct regs *r) {
   }
 }
 
-char getch(void) {
+char getch(void)
+{
   curr_char = NULL;
   while(!curr_char) printf("");
   return curr_char;
 }
 
-void init_keyboard(void) {
+void init_keyboard(void)
+{
     irq_install_handler(1, keyboard_handler);
 }
