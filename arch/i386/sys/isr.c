@@ -73,7 +73,9 @@ void init_isr(void) {
 }
 
 void fault_handler(struct regs *r) {
-    if (r->int_no < 32) {
+    if (r->int_no != 14) {
         PANIC(exception_messages[r->int_no]);
+    } else {
+        page_fault(r);
     }
 }

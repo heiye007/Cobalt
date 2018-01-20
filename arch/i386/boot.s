@@ -41,5 +41,5 @@ hang:
     jmp hang
 
 .section .kend
-.global end_of_kernel
-end_of_kernel:
+.global kernel_end
+kernel_end:
