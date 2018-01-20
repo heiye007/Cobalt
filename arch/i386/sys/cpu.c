@@ -1,7 +1,8 @@
 #include <i386/cpu.h>
 #include <stdint.h>
 
-void getCPUVendor(void) {
+void getCPUVendor(void)
+{
     uint16_t d;
     char vendor[13];
     cpuid(0, &d, (uint16_t *)(vendor + 0), (uint16_t *)(vendor + 8), (uint16_t *)(vendor + 4));
@@ -10,9 +11,12 @@ void getCPUVendor(void) {
     printf("CPU Vendor: %s\n", vendor);
 }
 
-void getCPUFeatures(void) {
+void getCPUFeatures(void)
+{
     uint16_t check;
-    if (check >= 0x01) {
+
+    if (check >= 0x01)
+    {
         cpuid(0x01, &eax, &ebx, &ecx, &edx);
 
         printf("CPU Features:");
@@ -23,7 +27,6 @@ void getCPUFeatures(void) {
         if (edx & CPUID_FEAT_EDX_MTRR)     printf(" MTRR");
 
         printf("\n");
-
         printf("CPU Instruction Set:");
 
         if (edx & CPUID_FEAT_EDX_TSC)      printf(" TSC");
@@ -42,24 +45,32 @@ void getCPUFeatures(void) {
     }
 }
 
-void getCPUArch(void) {
+void getCPUArch(void)
+{
     uint16_t a;
     cpuid(0x80000000, &a, &ebx, &ecx, &edx);
 
-    if (a >= 0x80000001) {
+    if (a >= 0x80000001)
+    {
         cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
 
-        if (edx & CPUID_FEAT_EDX_64_BIT) {
+        if (edx & CPUID_FEAT_EDX_64_BIT)
+        {
             printf("CPU Architecture: 64-bit\n");
-        } else {
+        }
+        else
+        {
             printf("CPU Architecture: 32-bit\n");
         }
     }
 }
 
-void getCPUName(void) {
+void getCPUName(void)
+{
     uint16_t cpuop;
-    if (cpuop >= 0x80000004) {
+
+    if (cpuop >= 0x80000004)
+    {
         char name[48];
         /*  EBX = 'h' 't' 'u' 'A'
             EDX = 'c' 't' 'n' 'e'
@@ -69,7 +80,9 @@ void getCPUName(void) {
         cpuid(0x80000004, (uint16_t *)(name + 32), (uint16_t *)(name + 36), (uint16_t *)(name + 40), (uint16_t *)(name + 44));
 
         const char *p = name;
-        while (*p == ' ') {
+
+        while (*p == ' ')
+        {
             ++p;
         }
 
