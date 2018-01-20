@@ -1,9 +1,10 @@
-#include <stdint.h>
 #include <vga.h>
 #include <i386/regs.h>
 #include <panic.h>
+#include <stdint.h>
 
-void panic(char* err, const char *file, uint32_t line) {
+void panic(char* err, const char *file, uint32_t line)
+{
 	struct regs* r;
 	disable_cursor();
 	settextcolor(CYAN, BLUE);
