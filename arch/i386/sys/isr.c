@@ -2,7 +2,8 @@
 #include <i386/regs.h>
 #include <panic.h>
 
-uint8_t *exception_messages[] = {
+uint8_t *exception_messages[] =
+{
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -37,7 +38,8 @@ uint8_t *exception_messages[] = {
     "Reserved"
 };
 
-void init_isr(void) {
+void init_isr(void)
+{
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)isr2, 0x08, 0x8E);
@@ -72,10 +74,14 @@ void init_isr(void) {
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
 }
 
-void fault_handler(struct regs *r) {
-    if (r->int_no != 14) {
+void fault_handler(struct regs *r)
+{
+    if (r->int_no != 14)
+    {
         PANIC(exception_messages[r->int_no]);
-    } else {
+    }
+    else
+    {
         page_fault(r);
     }
 }
