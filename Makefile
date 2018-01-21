@@ -42,6 +42,10 @@ compile: $(OBJS)
 	@echo "AS   $<"
 	${CROSS_COMPILE}as $< -o $@
 
+%.o: %.S
+	@echo "AS   $<"
+	${CROSS_COMPILE}as $< -o $@
+
 %.o: %.asm
 	@echo "AS   $<"
 
