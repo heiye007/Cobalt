@@ -3,11 +3,11 @@
 
 void pit_irq(void)
 {
-    asm volatile("add $0x1c, %esp");
-    asm volatile("pusha");
+    __asm__ __volatile__("add $0x1c, %esp");
+    __asm__ __volatile__("pusha");
     pic_send_eoi(0);
-    asm volatile("popa");
-    asm volatile("iret");
+    __asm__ __volatile__("popa");
+    __asm__ __volatile__("iret");
 }
 
 static inline void __pit_send_cmd(uint8_t cmd)
