@@ -5,6 +5,7 @@ BINDIR = ./bin
 INCDIR= -Iinclude
 
 include ./include/cobalt/arch.mk
+include ./fs/Makefile
 include ./usr/Makefile
 
 CFLAG:=$(CFLAG) -D$(ARCH)
@@ -60,11 +61,19 @@ clean:
 	@echo "RM    ISO"
 	rm -rf *.iso
 	rm -rf iso
+	rm -rf make_initrd
+	rm -rf initrd.img
+	rm -rf *.txt
 
 iso:
 	-@mkdir -p iso/boot/grub
 	-@echo $(CPUARCH) > iso/boot/grub/grub.cfg
 	-@cp ${BINDIR}/${KERNEL} iso/boot/${KERNEL}
+	-@gcc tools/make_initrd.c -o make_initrd
+	-@printf "Cobalt version: 1.0\0" > version.txt
+	-@printf "Welcome to Cobalt!\0" > motd.txt
+	-@./make_initrd version.txt version.txt motd.txt motd.txt
+	-@mv initrd.img iso/boot/initrd.img
 	@echo "ISO  ${IMAGE}"
 	-@grub-mkrescue -o ${IMAGE} ${IMAGEDIR} 2>/dev/null || true
 
