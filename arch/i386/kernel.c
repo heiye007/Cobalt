@@ -36,7 +36,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	}
 
 #ifdef DBG_INIT
-	printf("Kernel base is %x, end is %x\n", &kernel_start, &kernel_end);
+	printf("Kernel base is 0x%x, end is 0x%x\n", &kernel_start, &kernel_end);
 #endif
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
