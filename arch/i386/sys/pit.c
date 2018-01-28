@@ -1,4 +1,6 @@
 #include <i386/pit.h>
+#include <i386/vga.h>
+#include <i386/regs.h>
 #include <stdint.h>
 
 void pit_irq(void)
@@ -52,12 +54,39 @@ static void pit_start_counter(uint32_t freq, uint8_t counter, uint8_t mode)
     __pit_send_data((divisor >> 8) & 0xff, 0);
 }
 
+extern int lastlinedetect;
+
+void timer_handler(struct regs *r)
+{
+// XXX: Top Line Debugging for Cobalt
+
+// XXX: Example that shows column, row & lastlinedetect
+// cake: Used this to debug backspacing
+#ifdef DBG_PIT_TOPLINE_VGA
+    int old_row = get_row();
+    int old_col = get_col();
+    update_cursor(0,0);
+    settextcolor(BLACK, LGRAY);
+    for (int loop = 0; loop < 80; loop++) {
+        putch(' ');
+    }
+    update_cursor(0,0);
+    if (lastlinedetect == 0) {
+       printf("Current row: %d , Current col: %d, lastlinedetect = %d, Detection Happened", old_row, old_col, lastlinedetect); 
+    } else {
+        printf("Current row: %d , Current col: %d, lastlinedetect = %d", old_row, old_col, lastlinedetect); 
+    }
+    settextcolor(WHITE, BLACK);
+    update_cursor(old_row, old_col);
+#endif
+}
+
 void pit_init(void)
 {
 #ifdef DBG_PIT
     printk("Starting PIT initialization...\n");
 #endif
-
+    irq_install_handler(0, (uint32_t)timer_handler);
     irq_install_handler(32, (uint32_t)pit_irq);
     pit_start_counter(200,PIT_OCW_COUNTER_0, PIT_OCW_MODE_SQUAREWAVEGEN);
 
