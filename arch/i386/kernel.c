@@ -114,9 +114,11 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 		}
 	}
 
-	/* XXX: Legacy Paging Tester
+	// XXX: Legacy Paging Tester
+#ifdef DBG_PAGING_INIT
 	unsigned int *ptr = (unsigned int*)0xA0000000;
-   	unsigned int do_page_fault = *ptr;*/
+   	unsigned int do_page_fault = *ptr;
+#endif
 
 	shell();
 
