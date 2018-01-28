@@ -1,6 +1,6 @@
 #include <i386/isr.h>
 #include <i386/regs.h>
-#include <panic.h>
+#include <i386/panic.h>
 
 uint8_t *exception_messages[] =
 {

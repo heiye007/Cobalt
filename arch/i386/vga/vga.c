@@ -1,5 +1,5 @@
-#include <vga.h>
-#include <panic.h>
+#include <i386/vga.h>
+#include <i386/panic.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <types.h>
@@ -9,15 +9,15 @@
 
 unsigned short *textmemptr = (unsigned short *)0xB8000;
 int attrib = 0x0F;
-int csr_x = 0;
-int csr_y = 0;
+int row = 0;
+int col = 0;
 
 static void scroll(void)
 {
     uint8_t attributeByte = (0 << 4) | (15 & 0x0F);
     uint16_t blank = 0x20 | (attributeByte << 8);
 
-    if(csr_y >= ROWS)
+    if(col >= ROWS)
     {
         int i;
 
@@ -31,40 +31,40 @@ static void scroll(void)
             textmemptr[i] = blank;
         }
 
-        csr_y = (ROWS-1);
+        col = (ROWS-1);
     }
 }
 
 void move_csr(void)
 {
     unsigned temp;
-    temp = csr_y * WIDTH + csr_x;
+    temp = col * WIDTH + row;
     outb(0x3D4, 14);
     outb(0x3D5, temp >> 8);
     outb(0x3D4, 15);
     outb(0x3D5, temp);
 }
 
-void update_cursor(int row, int col)
+void update_cursor(int newrow, int newcol)
 {
-    unsigned short position=(row*80) + col;
+    unsigned short position = (newrow*80) + newcol;
     outb(0x3D4, 0x0F);
     outb(0x3D5, (uint8_t)(position&0xFF));
     outb(0x3D4, 0x0E);
     outb(0x3D5, (uint8_t)((position>>8)&0xFF));
-    csr_x = row;
-    csr_y = col;
+    row = newrow;
+    col = newcol;
     move_csr();
 }
 
-int get_csrx()
+int get_row()
 {
-    return csr_x;
+    return row;
 }
 
-int get_csry()
+int get_col()
 {
-    return csr_y;
+    return col;
 }
 
 void disable_cursor(void)
@@ -151,32 +151,32 @@ void putch(char c)
 
     if(c == 0x08)
     {
-        if(csr_x != 0) csr_x--;
+        if(row != 0) row--;
     }
     else if(c == 0x09)
     {
-        csr_x = (csr_x + 8) & ~(8 - 1);
+        row = (row + 8) & ~(8 - 1);
     }
     else if(c == '\r')
     {
-        csr_x = 0;
+        row = 0;
     }
     else if(c == '\n')
     {
-        csr_x = 0;
-        csr_y++;
+        row = 0;
+        col++;
     }
     else if(c >= ' ')
     {
-        where = textmemptr + (csr_y * WIDTH + csr_x);
+        where = textmemptr + (col * WIDTH + row);
         *where = c | att;
-        csr_x++;
+        row++;
     }
 
-    if(csr_x >= WIDTH)
+    if(row >= WIDTH)
     {
-        csr_x = 0;
-        csr_y++;
+        row = 0;
+        col++;
     }
 
     scroll();

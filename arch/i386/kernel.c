@@ -1,7 +1,7 @@
 #include <i386/isr.h>
 #include <fs/fs.h>
 #include <multiboot.h>
-#include <panic.h>
+#include <i386/panic.h>
 #include <stdbool.h>
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))

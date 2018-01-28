@@ -2,7 +2,7 @@
 #include "kframe.h"
 #include "kmalloc_early.h"
 #include "kheap.h"
-#include <panic.h>
+#include <i386/panic.h>
 #include <stdint.h>
 #include <types.h>
 
