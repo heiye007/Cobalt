@@ -20,6 +20,8 @@ uint32_t shell()
       {
         if (i == 0) continue;
         i--;
+        update_cursor(get_csrx()-1, get_csry());
+        putch(' ');
       }
       else
       {

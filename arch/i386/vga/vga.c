@@ -50,6 +50,16 @@ void update_cursor(int row, int col)
     move_csr();
 }
 
+int get_csrx()
+{
+    return csr_x;
+}
+
+int get_csry()
+{
+    return csr_y;
+}
+
 void disable_cursor(void)
 {
     outb(0x3D4, 0x0A);
