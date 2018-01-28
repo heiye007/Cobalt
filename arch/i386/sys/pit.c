@@ -1,96 +1,139 @@
 #include <i386/pit.h>
-#include <i386/vga.h>
-#include <i386/regs.h>
-#include <stdint.h>
 
-void pit_irq(void)
+/* timer_ticks keeps track of all the ticks that
+   will happen since PIT initialization */
+int timer_ticks = 0;
+
+/* cake: We should code a suitable RTC driver
+   for handling clock operations */
+// Seconds Declaration
+uint32_t seconds = 0;
+// Minutes Declaration
+uint32_t minutes = 0;
+// Hours Declaration
+uint32_t hours = 0;
+
+// Timer Hertz's
+uint32_t timer_hz = 0;
+
+void timer_phase(int hz)
 {
-    __asm__ __volatile__("add $0x1c, %esp");
-    __asm__ __volatile__("pusha");
-    pic_send_eoi(0);
-    __asm__ __volatile__("popa");
-    __asm__ __volatile__("iret");
+    timer_hz = hz;
+    int divisor = 1193180 / hz;
+    outb(0x43, 0x36);
+    outb(0x40, divisor & 0xFF);
+    outb(0x40, divisor >> 8);
 }
 
-static inline void __pit_send_cmd(uint8_t cmd)
-{
-    outb(PIT_REG_COMMAND, cmd);
-}
-
-static inline void __pit_send_data(uint16_t data, uint8_t counter)
-{
-    uint8_t port = (counter==PIT_OCW_COUNTER_0) ? PIT_REG_COUNTER0 :
-        ((counter==PIT_OCW_COUNTER_1) ? PIT_REG_COUNTER1 : PIT_REG_COUNTER2);
-
-    outb (port, (uint8_t)data);
-}
-
-static inline uint8_t __pit_read_data(uint16_t counter)
-{
-    uint8_t port = (counter==PIT_OCW_COUNTER_0) ? PIT_REG_COUNTER0 :
-        ((counter==PIT_OCW_COUNTER_1) ? PIT_REG_COUNTER1 : PIT_REG_COUNTER2);
-
-    return inb(port);
-}
-
-static void pit_start_counter(uint32_t freq, uint8_t counter, uint8_t mode)
-{
-    if (freq==0)
-    {
-        return;
-    }
-
-#ifdef DBG_PIT
-    printf("Starting counter %d with frequency %dHz\n", counter/0x40, freq);
-#endif
-
-    uint16_t divisor = (uint16_t)(1193181/(uint16_t)freq);
-    uint8_t ocw = 0;
-    ocw = (ocw & ~PIT_OCW_MASK_MODE) | mode;
-    ocw = (ocw & ~PIT_OCW_MASK_RL) | PIT_OCW_RL_DATA;
-    ocw = (ocw & ~PIT_OCW_MASK_COUNTER) | counter;
-    __pit_send_cmd(ocw);
-    __pit_send_data(divisor & 0xff, 0);
-    __pit_send_data((divisor >> 8) & 0xff, 0);
-}
-
-extern int lastlinedetect;
-
+/* Timer handler function with several routines */
 void timer_handler(struct regs *r)
 {
-// XXX: Top Line Debugging for Cobalt
+    /* Increment our ticks variable */
+    timer_ticks++;
 
-// XXX: Example that shows column, row & lastlinedetect
-// cake: Used this to debug backspacing
+    // XXX: Top Line Debugging for Cobalt
+    // XXX: Example that shows column, row & lastlinedetect
+    // cake: Used this to debug backspacing
 #ifdef DBG_PIT_TOPLINE_VGA
+    extern int lastlinedetect;
+
     int old_row = get_row();
     int old_col = get_col();
     update_cursor(0,0);
     settextcolor(BLACK, LGRAY);
-    for (int loop = 0; loop < 80; loop++) {
+
+    // cake: We don't have multitasking yet, very slow method to fill the top bar.
+    for (int loop = 0; loop < 80; loop++)
+    {
         putch(' ');
     }
+
     update_cursor(0,0);
-    if (lastlinedetect == 0) {
+
+    if (lastlinedetect == 0)
+    {
        printf("Current row: %d , Current col: %d, lastlinedetect = %d, Detection Happened", old_row, old_col, lastlinedetect); 
-    } else {
+    }
+    else
+    {
         printf("Current row: %d , Current col: %d, lastlinedetect = %d", old_row, old_col, lastlinedetect); 
     }
+
     settextcolor(WHITE, BLACK);
     update_cursor(old_row, old_col);
 #endif
+
+    // XXX: Default example that shows up time in clock-based data
+    int old_row = get_row();
+    int old_col = get_col();
+    update_cursor(0,0);
+    settextcolor(BLACK, LGRAY);
+
+    // cake: We don't have multitasking yet, very slow method to fill the top bar.
+    for (int loop = 0; loop < 80; loop++)
+    {
+        putch(' ');
+    }
+    
+    update_cursor(0,0);
+
+    if (minutes == 0)
+    {
+        printf("Uptime: %d second(s)", seconds); 
+    }
+    
+    if (hours == 0)
+    {
+        if (minutes != 0)
+        {
+            printf("Uptime: %d minute(s) and %d second(s)", minutes, seconds);
+        }
+    }
+
+    if (hours != 0)
+    {
+        if (hours != 24)
+        {
+            printf("Uptime: %d hour(s) %d minute(s) and %d second(s)", hours, minutes, seconds);
+        }
+    }
+
+    settextcolor(WHITE, BLACK);
+    update_cursor(old_row, old_col);
+
+    /* Every 18 ticks, update the uptime message */
+    if (timer_ticks % timer_hz == 0)
+    {
+        seconds++;
+        if (seconds == 60)
+        {
+            seconds = 0;
+            minutes++;
+        }
+
+        if (minutes == 60)
+        {
+            minutes = 0;
+            hours++;
+        }
+    }
+}
+
+/* Function to wait 'x' ticks */
+void timer_wait(int ticks)
+{
+    unsigned long eticks;
+
+    eticks = timer_ticks + ticks;
+    while(timer_ticks < eticks)
+    {
+        // Put the CPU to sleep for saving power while waiting
+        __asm__ __volatile__ ("sti//hlt//cli");
+    }
 }
 
 void pit_init(void)
 {
-#ifdef DBG_PIT
-    printk("Starting PIT initialization...\n");
-#endif
     irq_install_handler(0, (uint32_t)timer_handler);
-    irq_install_handler(32, (uint32_t)pit_irq);
-    pit_start_counter(200,PIT_OCW_COUNTER_0, PIT_OCW_MODE_SQUAREWAVEGEN);
-
-#ifdef DBG_PIT
-    printk("Started PIT successfully...\n");
-#endif
+    timer_phase(100); // Set to 100Hz
 }
