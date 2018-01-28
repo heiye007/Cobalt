@@ -189,6 +189,7 @@ void unmap_kernel_page(uint32_t address)
 
 void page_fault(registers_t regs)
 {
+    disable_cursor();
     // A page fault has occurred.
     // The faulting address is stored in the CR2 register.
     uint32_t faulting_address;
