@@ -55,16 +55,10 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	printkok("Initialized GDT");
 	init_idt();
 	printkok("Initialized IDT");
-	init_isr();
-	printkok("Initialized ISR's");
 	initialize_paging(total_frames, 0, 0);
 	printkok("Initialized Paging");
 	malloc_stats();
 	printkok("Initialized Memory Management Engine");
-	init_irq();
-	printkok("Initialized IRQ's");
-	__asm__ __volatile__ ("sti");
-	printkok("Interrupts enabled");
 	pic_init();
 	printkok("Initialized PIC");
 	pit_init();
