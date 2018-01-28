@@ -19,10 +19,10 @@ void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gr
    the segment registers */
 void init_gdt(void)
 {
-	/* Setup GDT pointer */
+	/* Setup GDT limit */
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
 
-    /* Setup GDT limit */
+    /* Setup GDT pointer */
     gp.base = &gdt;
 
     /* GDT Null Descriptor */
