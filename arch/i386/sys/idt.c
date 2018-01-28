@@ -1,5 +1,6 @@
 #include <i386/idt.h>
 
+/* Function to craft a gate for the Interrupt Descriptor Table */
 void idt_set_gate(uint8_t num, size_t base, unsigned short sel, uint8_t flags)
 {
     idt[num].base_lo = (base & 0xFFFF);
