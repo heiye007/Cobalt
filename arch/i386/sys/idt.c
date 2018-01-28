@@ -16,6 +16,7 @@ void init_idt(void)
     memset(&idt, 0, sizeof(struct idt_entry) * 256);
     init_isr();
     init_irq();
-    __asm__ __volatile__ ("sti");
     idt_load();
+
+    __asm__ __volatile__ ("sti");
 }
