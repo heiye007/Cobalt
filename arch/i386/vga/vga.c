@@ -12,26 +12,26 @@ int attrib = 0x0F;
 int csr_x = 0;
 int csr_y = 0;
 
-static void scroll()
+static void scroll(void)
 {
-    uint8_t attributeByte = (0 /*black*/ << 4) | (15 /*white*/ & 0x0F);
-    uint16_t blank = 0x20 /* space */ | (attributeByte << 8);
+    uint8_t attributeByte = (0 << 4) | (15 & 0x0F);
+    uint16_t blank = 0x20 | (attributeByte << 8);
 
-    if(csr_y >= 25)
+    if(csr_y >= ROWS)
     {
         int i;
 
-        for (i = 0*80; i < 24*80; i++)
+        for (i = 0*WIDTH; i < (ROWS-1)*WIDTH; i++)
         {
-            textmemptr[i] = textmemptr[i+80];
+            textmemptr[i] = textmemptr[i+WIDTH];
         }
 
-        for (i = 24*80; i < 25*80; i++)
+        for (i = (ROWS-1)*WIDTH; i < ROWS*WIDTH; i++)
         {
             textmemptr[i] = blank;
         }
 
-        csr_y = 24;
+        csr_y = (ROWS-1);
     }
 }
 
