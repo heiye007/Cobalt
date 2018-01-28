@@ -12,7 +12,7 @@ void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gr
     gdt[num].access = access;
 }
 
-/* Called on architecture init
+/* Called on architecture init.
    Setups the first 3 GDT entries
    and switches the resulting crafted
    GDT to the processor and updates
