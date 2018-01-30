@@ -7,7 +7,7 @@
 #define WIDTH 80
 #define ROWS 25
 
-unsigned short *textmemptr = (unsigned short *)0xB8000;
+volatile unsigned short *textmemptr = (unsigned short *)0xB8000;
 int attrib = 0x0F;
 int row = 0;
 int col = 0;
