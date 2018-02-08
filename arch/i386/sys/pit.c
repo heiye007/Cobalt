@@ -63,7 +63,8 @@ void timer_handler(struct regs *r)
     update_cursor(old_row, old_col);
 #endif
 
-    // XXX: Default example that shows up time in clock-based data
+#ifdef DBG_PIT_TOPLINE_UPTIME
+    // XXX: Example that shows up time in clock-based data
     int old_row = get_row();
     int old_col = get_col();
     update_cursor(0,0);
@@ -117,6 +118,8 @@ void timer_handler(struct regs *r)
             hours++;
         }
     }
+#endif
+
 }
 
 /* Function to wait 'x' ticks */
