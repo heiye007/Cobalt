@@ -1,4 +1,4 @@
-#include <i386/keyboard.h>
+#include <i386/8042.h>
 #include <stdint.h>
 #include <types.h>
 

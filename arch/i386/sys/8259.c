@@ -1,4 +1,4 @@
-#include <i386/pic.h>
+#include <i386/8259.h>
 #include <stdint.h>
 
 void pic_init(void)

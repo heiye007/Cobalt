@@ -1,4 +1,4 @@
-#include <i386/pit.h>
+#include <i386/8253.h>
 
 /* timer_ticks keeps track of all the ticks that
    will happen since PIT initialization */

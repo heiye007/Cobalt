@@ -1,5 +1,5 @@
 OBJS:= $(OBJS) arch/$(ARCH)/boot.o arch/$(ARCH)/kernel.o arch/$(ARCH)/sys/system.o arch/$(ARCH)/vga/vga.o arch/$(ARCH)/sys/isr.o arch/$(ARCH)/sys/gdt.o
 OBJS:= $(OBJS) arch/$(ARCH)/libc/string.o arch/$(ARCH)/sys/gdts.o arch/$(ARCH)/sys/idt.o arch/$(ARCH)/sys/idts.o arch/$(ARCH)/libc/cpuid.o 
-OBJS:= $(OBJS) arch/$(ARCH)/sys/isrs.o arch/$(ARCH)/sys/irq.o arch/$(ARCH)/sys/irqs.o arch/$(ARCH)/sys/pit.o arch/$(ARCH)/sys/pic.o
-OBJS:= $(OBJS) arch/$(ARCH)/keyboard/keyboard.o arch/$(ARCH)/sys/cpu.o arch/$(ARCH)/sys/panic.o arch/$(ARCH)/mm/kframe.o arch/$(ARCH)/mm/kheap.o 
+OBJS:= $(OBJS) arch/$(ARCH)/sys/isrs.o arch/$(ARCH)/sys/irq.o arch/$(ARCH)/sys/irqs.o arch/$(ARCH)/sys/8253.o arch/$(ARCH)/sys/8259.o
+OBJS:= $(OBJS) arch/$(ARCH)/keyboard/8042.o arch/$(ARCH)/sys/cpu.o arch/$(ARCH)/sys/panic.o arch/$(ARCH)/mm/kframe.o arch/$(ARCH)/mm/kheap.o 
 OBJS:= $(OBJS) arch/$(ARCH)/mm/kmalloc_early.o arch/$(ARCH)/mm/paging.o
