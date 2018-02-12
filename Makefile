@@ -5,8 +5,6 @@ BINDIR = ./bin
 INCDIR= -Iinclude
 
 include ./include/cobalt/arch.mk
-include ./fs/Makefile
-include ./usr/Makefile
 
 CFLAG:=$(CFLAG) -D$(ARCH)
 

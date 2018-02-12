@@ -1,5 +1,5 @@
 #include <i386/isr.h>
-#include <fs/fs.h>
+#include <i386/fs.h>
 #include <multiboot.h>
 #include <i386/panic.h>
 #include <stdbool.h>

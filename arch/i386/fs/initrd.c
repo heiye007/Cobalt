@@ -1,7 +1,7 @@
 // initrd.c -- Defines the interface for and structures relating to the initial ramdisk.
 //             Written for JamesM's kernel development tutorials.
 
-#include <fs/initrd.h>
+#include <i386/initrd.h>
 
 initrd_header_t *initrd_header;     // The header.
 initrd_file_header_t *file_headers; // The list of file headers.
