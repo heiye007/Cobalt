@@ -1,4 +1,6 @@
 #include <i386/cpu.h>
+#include <i386/cpuid.h>
+#include <i386/vga.h>
 
 void getCPUVendor(void)
 {
@@ -13,8 +15,8 @@ void getCPUVendor(void)
 void getCPUFeatures(void)
 {
     uint16_t check;
-
-    if (check >= 0x01)
+    uint16_t ccheck = 0x01;
+    if (&check >= &ccheck)
     {
         cpuid(0x01, &eax, &ebx, &ecx, &edx);
 
@@ -67,8 +69,8 @@ void getCPUArch(void)
 void getCPUName(void)
 {
     uint16_t cpuop;
-
-    if (cpuop >= 0x80000004)
+    uint16_t ccpuop = 0x80000004;
+    if (&cpuop >= &ccpuop)
     {
         char name[48];
         /*  EBX = 'h' 't' 'u' 'A'
