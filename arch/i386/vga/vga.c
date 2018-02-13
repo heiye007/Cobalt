@@ -1,8 +1,5 @@
 #include <i386/vga.h>
 #include <i386/panic.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <types.h>
 
 #define WIDTH 80
 #define ROWS 25
@@ -12,7 +9,7 @@ int attrib = 0x0F;
 int row = 0;
 int col = 0;
 
-static void scroll(void)
+void scroll(void)
 {
     uint8_t attributeByte = (0 << 4) | (15 & 0x0F);
     uint16_t blank = 0x20 | (attributeByte << 8);
@@ -206,7 +203,7 @@ void init_vga(void)
     enable_cursor(14, 15);
 }
 
-static void printkint(const int number)
+void printkint(const int number)
 {
     char buf[20];
     buf[0] = 0;

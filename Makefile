@@ -8,6 +8,11 @@ include ./include/cobalt/arch.mk
 
 CFLAG:=$(CFLAG) -D$(ARCH)
 
+kernel: 
+	make clean
+	make compile
+	make iso
+	
 all:
 	make clean
 	make compile
@@ -20,11 +25,6 @@ debug:
 	make iso
 	make run
 	make clean
-
-kernel: 
-	make clean
-	make compile
-	make iso
 
 compile: $(OBJS)
 	@echo "LD   $(KERNEL)"

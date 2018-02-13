@@ -1,6 +1,6 @@
-#include "paging.h"
-#include "kframe.h"
-#include "kmalloc_early.h"
+#include <i386/paging.h>
+#include <i386/kframe.h>
+#include <i386/kmalloc_early.h>
 #include <i386/panic.h>
 #include <stdint.h>
 #include <stddef.h>

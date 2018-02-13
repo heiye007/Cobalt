@@ -1,6 +1,7 @@
-#include "kheap.h"
-#include "paging.h"
+#include <i386/kheap.h>
+#include <i386/paging.h>
 #include <i386/panic.h>
+#include <string.h>
 #include <stdint.h>
 #include <types.h>
 
@@ -41,9 +42,9 @@ void malloc_stats()
 	printf("Heap starts @ 0x%x ends @ 0x%x and contains ", memoryhead, memoryend);
 #endif
 
-	uint32_t bytes = memoryend - memoryhead;
-
 #ifdef DBG_HEAP
+	uint32_t bytes = memoryend - memoryhead;
+	
 	if(bytes / 1024 / 1024 > 0)
 	{
 		printf("%d MiB.\nCurrent allocations: [%d]\n", bytes / 1024 / 1024, allocations);

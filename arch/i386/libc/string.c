@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdint.h>
 
 /* Simple function to get a string's length */

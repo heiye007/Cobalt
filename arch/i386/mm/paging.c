@@ -1,8 +1,10 @@
-#include "paging.h"
-#include "kframe.h"
-#include "kmalloc_early.h"
-#include "kheap.h"
+#include <i386/paging.h>
+#include <i386/kframe.h>
+#include <i386/kmalloc_early.h>
+#include <i386/kheap.h>
 #include <i386/panic.h>
+#include <i386/vga.h>
+#include <string.h>
 #include <stdint.h>
 #include <types.h>
 
@@ -11,6 +13,8 @@ struct page_directory *current_directory;
 extern uint32_t placement_address;
 
 uint8_t initialized = 0;
+
+extern void irq_install_handler(int irq, void (*handler)(struct regs *r));
 
 void identity_map(uint32_t address, uint32_t length)
 {
@@ -187,8 +191,9 @@ void unmap_kernel_page(uint32_t address)
     }
 }
 
-void page_fault(registers_t regs)
+void page_fault(struct regs* r)
 {
+    // = kmalloc(sizeof(struct regs*));
     disable_cursor();
     // A page fault has occurred.
     // The faulting address is stored in the CR2 register.
@@ -196,10 +201,10 @@ void page_fault(registers_t regs)
     __asm__ __volatile__("mov %%cr2, %0" : "=r" (faulting_address));
 
     // The error code gives us details of what happened.
-    int present = !(regs.err_code & 0x1); // Page not present
-    int rw = regs.err_code & 0x2;         // Write operation?
-    int us = regs.err_code & 0x4;         // Processor was in user-mode?
-    int reserved = regs.err_code & 0x8;   // Overwritten CPU-reserved bits of page entry?
+    int present = !(r->err_code & 0x1); // Page not present
+    int rw = r->err_code & 0x2;         // Write operation?
+    int us = r->err_code & 0x4;         // Processor was in user-mode?
+    int reserved = r->err_code & 0x8;   // Overwritten CPU-reserved bits of page entry?
     //int id = regs.err_code & 0x10;        // Caused by an instruction fetch?
 
     // Output an error message.

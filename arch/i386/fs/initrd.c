@@ -8,7 +8,7 @@ initrd_file_header_t *file_headers; // The list of file headers.
 fs_node_t *initrd_root;             // Our root directory node.
 fs_node_t *initrd_dev;              // We also add a directory node for /dev, so we can mount devfs later on.
 fs_node_t *root_nodes;              // List of file nodes.
-int nroot_nodes;                    // Number of file nodes.
+uint32_t nroot_nodes;                    // Number of file nodes.
 
 struct dirent dirent;
 
@@ -47,7 +47,7 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
         !strcmp(name, "dev") )
         return initrd_dev;
 
-    int i;
+    uint32_t i;
     for (i = 0; i < nroot_nodes; i++)
         if (!strcmp(name, root_nodes[i].name))
             return &root_nodes[i];
@@ -92,7 +92,7 @@ fs_node_t *initialise_initrd(uint32_t location)
     nroot_nodes = initrd_header->nfiles;
 
     // For every file...
-    int i;
+    uint32_t i;
     for (i = 0; i < initrd_header->nfiles; i++)
     {
         // Edit the file's header - currently it holds the file offset
@@ -100,7 +100,7 @@ fs_node_t *initialise_initrd(uint32_t location)
         // of memory.
         file_headers[i].offset += location;
         // Create a new file node.
-        strcpy(root_nodes[i].name, &file_headers[i].name);
+        strcpy(root_nodes[i].name, file_headers[i].name);
         root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
         root_nodes[i].length = file_headers[i].length;
         root_nodes[i].inode = i;

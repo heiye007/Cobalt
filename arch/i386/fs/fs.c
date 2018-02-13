@@ -23,7 +23,7 @@ uint32_t write_fs(fs_node_t *node, uint32_t offset, uint32_t size, uint8_t *buff
         return 0;
 }
 
-void open_fs(fs_node_t *node, uint8_t read, uint8_t write)
+void open_fs(fs_node_t *node)
 {
     // Has the node got an open callback?
     if (node->open != 0)

@@ -5,6 +5,8 @@
 #define INITRD_H
 
 #include "fs.h"
+#include <i386/kheap.h>
+#include <string.h>
 #include <stdint.h>
 
 typedef struct
@@ -15,7 +17,7 @@ typedef struct
 typedef struct
 {
     uint8_t magic;     // Magic number, for error checking.
-    int8_t name[64];  // Filename.
+    const char name[64];  // Filename.
     uint32_t offset;   // Offset in the initrd that the file starts.
     uint32_t length;   // Length of the file.
 } initrd_file_header_t;

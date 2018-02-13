@@ -1,4 +1,4 @@
-#include "kmalloc_early.h"
+#include <i386/kmalloc_early.h>
 #include <i386/panic.h>
 #include <stdint.h>
 #include <types.h>

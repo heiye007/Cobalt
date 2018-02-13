@@ -1,3 +1,6 @@
+#include <i386/vga.h>
+#include <i386/8042.h>
+#include <string.h>
 #include <stdint.h>
 
 int lastlinedetect;
@@ -65,8 +68,10 @@ uint32_t shell()
     }
     else if (!strcmp(cmd, "panic"))
     {
-      int a = 0;
-      printf(80/a);
+      int a = 10;
+      int b = 0;
+      int c = a/b;
+      printf("%d", c);
     }
     else
     {
