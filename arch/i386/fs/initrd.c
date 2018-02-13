@@ -113,5 +113,9 @@ fs_node_t *initialise_initrd(uint32_t location)
         root_nodes[i].close = 0;
         root_nodes[i].impl = 0;
     }
+
+    kfree(initrd_root);
+    kfree(initrd_dev);
+    kfree(root_nodes);
     return initrd_root;
 }
