@@ -1,4 +1,4 @@
-KERNEL=kernel.bin
+KERNEL=kernel.elf
 IMAGE=kernel.iso
 IMAGEDIR = iso
 BINDIR = ./bin
