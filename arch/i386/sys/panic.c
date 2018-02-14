@@ -3,7 +3,7 @@
 #include <i386/panic.h>
 #include <stdint.h>
 
-void panic(const char* err, const char *file, uint32_t line)
+void panic(const char* err)
 {
 	struct regs *r;
 	disable_cursor();
@@ -19,7 +19,7 @@ void panic(const char* err, const char *file, uint32_t line)
 	printf("  EDI: 0x%x", r->edi);
 	printf("  EBP: 0x%x", r->ebp);
 	printf("  ESP: 0x%x", r->esp);
-	printf("\n     Reason: (%s) at %s:%d\n", err, file, line);
+	printf("\n     Reason: %s", err);
 	__asm__ __volatile__ ("cli");
 	__asm__ __volatile__ ("hlt");
 	for (;;);
