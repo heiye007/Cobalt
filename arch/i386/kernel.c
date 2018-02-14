@@ -110,7 +110,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 			else
 			{
 				printf("\n\t contents: \"");
-				char buf[256];
+				uint8_t buf[256];
 				uint32_t sz = read_fs(fsnode, 0, 256, buf);
 				unsigned int j;
 		

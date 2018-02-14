@@ -1,6 +1,6 @@
 #include <i386/isr.h>
+#include <i386/paging.h>
 #include <i386/idt.h>
-#include <i386/regs.h>
 #include <i386/panic.h>
 
 const char *exception_messages[] =
