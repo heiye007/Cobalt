@@ -1,4 +1,15 @@
 #include <i386/isr.h>
+#include <i386/shell.h>
+#include <i386/8042.h>
+#include <i386/8253.h>
+#include <i386/8259.h>
+#include <i386/kheap.h>
+#include <i386/gdt.h>
+#include <i386/paging.h>
+#include <i386/initrd.h>
+#include <i386/idt.h>
+#include <i386/irq.h>
+#include <i386/vga.h>
 #include <i386/fs.h>
 #include <multiboot.h>
 #include <i386/panic.h>
@@ -19,8 +30,9 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	getCPUArch();
 	getCPUName();
 #endif
+	
 	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
-	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
+	//uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
 	
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
@@ -100,7 +112,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 				printf("\n\t contents: \"");
 				char buf[256];
 				uint32_t sz = read_fs(fsnode, 0, 256, buf);
-				int j;
+				unsigned int j;
 		
 				for (j = 0; j < sz; j++)
 				{

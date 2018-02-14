@@ -1,5 +1,23 @@
 #include <i386/irq.h>
+#include <i386/system.h>
+#include <i386/idt.h>
 #include <i386/regs.h>
+
+void *irq_routines[16] =
+{
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
+void irq_install_handler(int irq, void (*handler))
+{
+    irq_routines[irq] = handler;
+}
+
+void irq_uninstall_handler(int irq)
+{
+    irq_routines[irq] = 0;
+}
 
 void irq_remap(void)
 {

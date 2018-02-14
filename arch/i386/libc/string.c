@@ -10,7 +10,7 @@ size_t strlen(const char *s)
     return 0;
   }
   
-  char *ptr = s;
+  const char *ptr = s;
 
   while (*s)
   {

@@ -1,4 +1,7 @@
 #include <i386/idt.h>
+#include <i386/irq.h>
+#include <i386/isr.h>
+#include <string.h>
 
 /* Function to craft a gate for the Interrupt Descriptor Table */
 void idt_set_gate(uint8_t num, size_t base, unsigned short sel, uint8_t flags)

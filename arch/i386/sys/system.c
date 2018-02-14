@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <i386/system.h>
 
 uint8_t inb (unsigned short _port)
 {

@@ -1,4 +1,9 @@
 #include <i386/8253.h>
+#include <i386/system.h>
+#include <i386/vga.h>
+#include <i386/regs.h>
+
+extern void irq_install_handler(int irq, void (*handler));
 
 /* timer_ticks keeps track of all the ticks that
    will happen since PIT initialization */
@@ -26,7 +31,7 @@ void timer_phase(int hz)
 }
 
 /* Timer handler function with several routines */
-void timer_handler(struct regs *r)
+void timer_handler()
 {
     /* Increment our ticks variable */
     timer_ticks++;
@@ -125,7 +130,7 @@ void timer_handler(struct regs *r)
 /* Function to wait 'x' ticks */
 void timer_wait(int ticks)
 {
-    unsigned long eticks;
+    int eticks;
 
     eticks = timer_ticks + ticks;
     while(timer_ticks < eticks)
@@ -137,6 +142,6 @@ void timer_wait(int ticks)
 
 void pit_init(void)
 {
-    irq_install_handler(0, (uint32_t)timer_handler);
+    irq_install_handler(0, timer_handler);
     timer_phase(100); // Set to 100Hz
 }

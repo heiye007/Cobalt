@@ -31,4 +31,6 @@ struct gdt_ptr gp;
 /* cake: Function declared on another file
    to reload the segment registers and swap
    out CPU's GDT table with ours */
-extern void gdt_flush();		
+extern void gdt_flush();
+void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gran);
+void init_gdt(void);		

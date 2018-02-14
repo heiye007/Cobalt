@@ -1,10 +1,12 @@
 #include <i386/vga.h>
+#include <i386/system.h>
 #include <i386/panic.h>
+#include <string.h>
 
 #define WIDTH 80
 #define ROWS 25
 
-volatile unsigned short *textmemptr = (unsigned short *)0xB8000;
+unsigned short *textmemptr = (unsigned short *)0xB8000;
 int attrib = 0x0F;
 int row = 0;
 int col = 0;
@@ -182,7 +184,7 @@ void putch(char c)
 
 void printk(char *text)
 {
-    int i;
+    unsigned int i;
 
     for (i = 0; i < strlen(text); i++)
     {

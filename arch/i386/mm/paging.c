@@ -14,7 +14,7 @@ extern uint32_t placement_address;
 
 uint8_t initialized = 0;
 
-extern void irq_install_handler(int irq, void (*handler)(struct regs *r));
+extern void irq_install_handler(int irq, void (*handler));
 
 void identity_map(uint32_t address, uint32_t length)
 {
@@ -193,7 +193,6 @@ void unmap_kernel_page(uint32_t address)
 
 void page_fault(struct regs* r)
 {
-    // = kmalloc(sizeof(struct regs*));
     disable_cursor();
     // A page fault has occurred.
     // The faulting address is stored in the CR2 register.

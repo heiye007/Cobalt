@@ -1,6 +1,10 @@
 #include <i386/8042.h>
+#include <i386/vga.h>
+#include <i386/system.h>
 #include <stdint.h>
 #include <types.h>
+
+extern void irq_install_handler(int irq, void (*handler));
 
 uint8_t keycode[128] =
 {
@@ -50,9 +54,8 @@ struct SKeys
 int kbd_state = 0;
 char curr_char = NULL;
 
-void keyboard_handler(struct regs *r)
+void keyboard_handler()
 {
-    uint16_t scancode;
     uint16_t scancodebuf[5];
     uint16_t *sc = scancodebuf;
 

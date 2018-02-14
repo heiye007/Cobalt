@@ -1,8 +1,9 @@
 #include <i386/isr.h>
+#include <i386/idt.h>
 #include <i386/regs.h>
 #include <i386/panic.h>
 
-uint8_t *exception_messages[] =
+const char *exception_messages[] =
 {
     "Division By Zero",
     "Debug",
