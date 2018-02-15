@@ -29,9 +29,6 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	getCPUName();
 #endif
 	
-	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
-	//uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
-	
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
 
@@ -60,8 +57,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
     printf("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
     printf("PAGING size: %d \n",  high_pages);
 #endif
-    a20_enable();
-    printkok("Initialized A20");
+
 	init_gdt();
 	printkok("Initialized GDT");
 	init_idt();
