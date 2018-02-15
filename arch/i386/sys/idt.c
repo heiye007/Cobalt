@@ -24,7 +24,7 @@ void init_idt(void)
     idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
 
     /* Setup IDT pointer */
-    idtp.base = &idt;
+    idtp.base = (int) &idt;
 
     /* Clear the IDT by zeroing out it */
     memset(&idt, 0, sizeof(struct idt_entry) * 256);
