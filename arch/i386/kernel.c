@@ -78,6 +78,10 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	init_keyboard();
 	printkok("Initialized Keyboard");
 
+	for (mmap = (multiboot_memory_map_t*) mbi->mmap_addr; (uint32_t) mmap < mbi->mmap_addr + mbi->mmap_length; mmap = (multiboot_memory_map_t*) ((uint32_t) mmap + mmap->size + sizeof(mmap->size))) {
+		printf("size = 0x%x, base_addr = 0x%x%x, length = 0x%x%x, type = 0x%x\n", (uint32_t) mmap->size, mmap->addr >> 32, mmap->addr & 0xFFFFFFFF, mmap->len >> 32, mmap->len & 0xFFFFFFFF, (uint32_t) mmap->type);		
+	}
+
 	printf("Mods count: %d\n", mbi->mods_count);
 
 	bool modules_exist = false;
