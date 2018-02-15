@@ -39,7 +39,7 @@ void malloc_stats()
 {
 
 #ifdef DBG_HEAP
-	printf("Heap starts @ 0x%x ends @ 0x%x and contains ", memoryhead, memoryend);
+	printk("Heap starts @ 0x%x ends @ 0x%x and contains ", memoryhead, memoryend);
 #endif
 
 #ifdef DBG_HEAP
@@ -47,15 +47,15 @@ void malloc_stats()
 	
 	if(bytes / 1024 / 1024 > 0)
 	{
-		printf("%d MiB.\nCurrent allocations: [%d]\n", bytes / 1024 / 1024, allocations);
+		printk("%d MiB.\nCurrent allocations: [%d]\n", bytes / 1024 / 1024, allocations);
 	}
 	else if(bytes / 1024 > 0)
 	{
-		printf("%d KiB.\nCurrent allocations: [%d]\n", bytes / 1024, allocations);
+		printk("%d KiB.\nCurrent allocations: [%d]\n", bytes / 1024, allocations);
 	}
 	else
 	{
-		printf("%d B.\nCurrent allocations: [%d]\n", bytes, allocations);
+		printk("%d B.\nCurrent allocations: [%d]\n", bytes, allocations);
 	}
 #endif
 
@@ -70,15 +70,15 @@ void malloc_stats()
 #ifdef DBG_HEAP
 	if(free / 1024 / 1024 > 0)
 	{
-		printf("Free: [%d MiB]\n", free / 1024 / 1024);
+		printk("Free: [%d MiB]\n", free / 1024 / 1024);
 	}
 	else if(free / 1024 > 0)
 	{
-		printf("Free: [%d KiB]\n", free / 1024);
+		printk("Free: [%d KiB]\n", free / 1024);
 	
 	else
 	{
-		printf("Free: [%d Bytes]\n", free);
+		printk("Free: [%d Bytes]\n", free);
 	}
 #endif
 }
@@ -285,7 +285,7 @@ void *kmalloc_ap(uint32_t size, uint8_t align, uint32_t *phys)
 	uint32_t needed_size = size + sizeof (struct free_header) + sizeof (struct footer);
 
 #ifdef DBG_HEAP
-	printf("Allocating %d Byte(s)\n", needed_size);
+	printk("Allocating %d Byte(s)\n", needed_size);
 #endif
 
 	// Find a free block.

@@ -1,7 +1,7 @@
 #include <i386/vga.h>
 #include <string.h>
 
-void printf(char* fmt, ...)
+void printk(char* fmt, ...)
 {
     if (fmt)
     {
@@ -35,7 +35,7 @@ void printf(char* fmt, ...)
                         break;
                     case 's':
                         d_str = va_arg(list, char*);
-                        printk(d_str);
+                        print(d_str);
                         break;
                     case 'u':
                         u_num = va_arg(list, uint16_t);

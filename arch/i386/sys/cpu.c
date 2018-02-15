@@ -9,7 +9,7 @@ void getCPUVendor(void)
     cpuid(0, &d, (uint16_t *)(vendor + 0), (uint16_t *)(vendor + 8), (uint16_t *)(vendor + 4));
     vendor[12] = '\0';
 
-    printf("CPU Vendor: %s\n", vendor);
+    printk("CPU Vendor: %s\n", vendor);
 }
 
 void getCPUFeatures(void)
@@ -20,29 +20,29 @@ void getCPUFeatures(void)
     {
         cpuid(0x01, &eax, &ebx, &ecx, &edx);
 
-        printf("CPU Features:");
+        printk("CPU Features:");
 
-        if (edx & CPUID_FEAT_EDX_PSE)      printf(" PSE");
-        if (edx & CPUID_FEAT_EDX_PAE)      printf(" PAE");
-        if (edx & CPUID_FEAT_EDX_APIC)     printf(" APIC");
-        if (edx & CPUID_FEAT_EDX_MTRR)     printf(" MTRR");
+        if (edx & CPUID_FEAT_EDX_PSE)      printk(" PSE");
+        if (edx & CPUID_FEAT_EDX_PAE)      printk(" PAE");
+        if (edx & CPUID_FEAT_EDX_APIC)     printk(" APIC");
+        if (edx & CPUID_FEAT_EDX_MTRR)     printk(" MTRR");
 
-        printf("\n");
-        printf("CPU Instruction Set:");
+        printk("\n");
+        printk("CPU Instruction Set:");
 
-        if (edx & CPUID_FEAT_EDX_TSC)      printf(" TSC");
-        if (edx & CPUID_FEAT_EDX_MSR)      printf(" MSR");
-        if (edx & CPUID_FEAT_EDX_SSE)      printf(" SSE");
-        if (edx & CPUID_FEAT_EDX_SSE2)     printf(" SSE2");
-        if (ecx & CPUID_FEAT_ECX_SSE3)     printf(" SSE3");
-        if (ecx & CPUID_FEAT_ECX_SSSE3)    printf(" SSSE3");
-        if (ecx & CPUID_FEAT_ECX_SSE41)    printf(" SSE41");
-        if (ecx & CPUID_FEAT_ECX_SSE42)    printf(" SSE42");
-        if (ecx & CPUID_FEAT_ECX_AVX)      printf(" AVX");
-        if (ecx & CPUID_FEAT_ECX_F16C)     printf(" F16C");
-        if (ecx & CPUID_FEAT_ECX_RDRAND)   printf(" RDRAND");
+        if (edx & CPUID_FEAT_EDX_TSC)      printk(" TSC");
+        if (edx & CPUID_FEAT_EDX_MSR)      printk(" MSR");
+        if (edx & CPUID_FEAT_EDX_SSE)      printk(" SSE");
+        if (edx & CPUID_FEAT_EDX_SSE2)     printk(" SSE2");
+        if (ecx & CPUID_FEAT_ECX_SSE3)     printk(" SSE3");
+        if (ecx & CPUID_FEAT_ECX_SSSE3)    printk(" SSSE3");
+        if (ecx & CPUID_FEAT_ECX_SSE41)    printk(" SSE41");
+        if (ecx & CPUID_FEAT_ECX_SSE42)    printk(" SSE42");
+        if (ecx & CPUID_FEAT_ECX_AVX)      printk(" AVX");
+        if (ecx & CPUID_FEAT_ECX_F16C)     printk(" F16C");
+        if (ecx & CPUID_FEAT_ECX_RDRAND)   printk(" RDRAND");
 
-        printf("\n");
+        printk("\n");
     }
 }
 
@@ -57,11 +57,11 @@ void getCPUArch(void)
 
         if (edx & CPUID_FEAT_EDX_64_BIT)
         {
-            printf("CPU Architecture: 64-bit\n");
+            printk("CPU Architecture: 64-bit\n");
         }
         else
         {
-            printf("CPU Architecture: 32-bit\n");
+            printk("CPU Architecture: 32-bit\n");
         }
     }
 }
@@ -87,6 +87,6 @@ void getCPUName(void)
             ++p;
         }
 
-        printf("CPU Name: %s\n", p);
+        printk("CPU Name: %s\n", p);
     }
 }

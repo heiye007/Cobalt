@@ -8,11 +8,11 @@ int lastlinedetect;
 uint32_t shell()
 {
   char c, line[80], cmd[80], arg[80];
-  printf("Running Shell...\n");
+  printk("Running Shell...\n");
 
   while(1)
   {
-    printf("$ ");
+    printk("$ ");
     lastlinedetect = 0;
     memset(line, '\0', 80);
     memset(cmd, '\0', 80);
@@ -64,18 +64,18 @@ uint32_t shell()
 
     if (!strcmp(cmd, "hello"))
     {
-      printf("Hello!\n");
+      printk("Hello!\n");
     }
     else if (!strcmp(cmd, "panic"))
     {
       int a = 10;
       int b = 0;
       int c = a/b;
-      printf("%d", c);
+      printk("%d", c);
     }
     else
     {
-      printf("Unknown command: %s\n", cmd);
+      printk("Unknown command: %s\n", cmd);
     }
   }
 

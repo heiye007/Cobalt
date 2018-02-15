@@ -108,7 +108,7 @@ void printkcenter(char* c)
             putch(' ');
         }
 
-        printf(c);
+        printk(c);
 
         for(int i = 0; i < 40 - half - 2; i++)
         {
@@ -124,7 +124,7 @@ void printkcenter(char* c)
             putch(' ');
         }
         
-        printf(c);
+        printk(c);
         
         for(int i = 0; i < 40 - half; i++)
         {
@@ -135,22 +135,22 @@ void printkcenter(char* c)
 
 void printkok(char *text)
 {
-    printk("[ ");
+    print("[ ");
     settextcolor(10, 0);
-    printk(" OK ");
+    print(" OK ");
     settextcolor(15, 0);
-    printk(" ] ");
-    printf("%s\n", text);
+    print(" ] ");
+    printk("%s\n", text);
 }
 
 void printkfail(char *text)
 {
-    printk("[ ");
+    print("[ ");
     settextcolor(10, 0);
-    printk("FAIL");
+    print("FAIL");
     settextcolor(15, 0);
-    printk(" ] ");
-    printf("%s\n", text);
+    print(" ] ");
+    printk("%s\n", text);
 }
 
 void putch(char c)
@@ -192,7 +192,7 @@ void putch(char c)
     move_csr();
 }
 
-void printk(char *text)
+void print(char *text)
 {
     unsigned int i;
 
@@ -279,7 +279,7 @@ void printkdec(uint16_t n)
         c2[i--] = c[j++];
     }
 
-    printk(c2);
+    print(c2);
 }
 
 char hex_letters[] =

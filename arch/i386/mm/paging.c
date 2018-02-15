@@ -44,7 +44,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     // This is wasteful, but a lot easier than figuring out how to build
     // a kernel page allocator.
 #ifdef DBG_PAGING
-    printf("[PAGING] Allocating kernel page tables...\n");
+    printk("[PAGING] Allocating kernel page tables...\n");
 #endif
     uint32_t i = 0;
 
@@ -60,7 +60,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     }
 
 #ifdef DBG_PAGING
-    printf("[PAGING] Allocated kernel page tables\n");
+    printk("[PAGING] Allocated kernel page tables\n");
 #endif
 
     // We need to identity map (phys addr = virt addr) from
@@ -88,7 +88,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     uint32_t heap_start = disable_early_kmalloc();
 
 #ifdef DBG_PAGING
-    printf("  KHEAP_START: %x\n", heap_start);
+    printk("  KHEAP_START: %x\n", heap_start);
 #endif
 
     // bootstrap the kheap with INITIAL_HEAP_PAGE_COUNT pages.
@@ -110,14 +110,14 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     initialized = 1;
 
 #ifdef DBG_PAGING
-    printf("[PAGING] Initializing kernel heap...\n");
+    printk("[PAGING] Initializing kernel heap...\n");
 #endif
 
     // Set up the kernel heap!
     initialize_kheap(heap_start);
 
 #ifdef DBG_PAGING
-    printf("[PAGING] Kernel heap initialized\n");
+    printk("[PAGING] Kernel heap initialized\n");
 #endif
 }
 
@@ -207,12 +207,12 @@ void page_fault(struct regs* r)
     //int id = regs.err_code & 0x10;        // Caused by an instruction fetch?
 
     // Output an error message.
-    printf("Page fault! ( ");
-    if (present) {printf("present ");}
-    if (rw) {printf("read-only ");}
-    if (us) {printf("user-mode ");}
-    if (reserved) {printf("reserved ");}
-    printf(") at %x\n", faulting_address);
+    printk("Page fault! ( ");
+    if (present) {printk("present ");}
+    if (rw) {printk("read-only ");}
+    if (us) {printk("user-mode ");}
+    if (reserved) {printk("reserved ");}
+    printk(") at %x\n", faulting_address);
     __asm__ __volatile__ ("cli");
     __asm__ __volatile__ ("hlt");
     for (;;);

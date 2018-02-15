@@ -95,7 +95,7 @@ void keyboard_handler()
 char getch(void)
 {
   curr_char = NULL;
-  while(!curr_char) printf("");
+  while(!curr_char) printk("");
   return curr_char;
 }
 

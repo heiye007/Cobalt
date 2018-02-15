@@ -38,14 +38,14 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
-		printf("Invalid magic number: 0x%x\n", (unsigned) magic);
+		printk("Invalid magic number: 0x%x\n", (unsigned) magic);
 		__asm__ __volatile__ ("cli");
 		__asm__ __volatile__ ("hlt");
 		return;
 	}
 
 #ifdef DBG_INIT
-	printf("Kernel base is 0x%x, end is 0x%x\n", &kernel_start, &kernel_end);
+	printk("Kernel base is 0x%x, end is 0x%x\n", &kernel_start, &kernel_end);
 #endif
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
@@ -56,8 +56,8 @@ void init(unsigned long magic, multiboot_info_t *mbi)
     }
 
 #ifdef DBG_INIT
-    printf("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
-    printf("PAGING size: %d \n",  high_pages);
+    printk("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
+    printk("PAGING size: %d \n",  high_pages);
 #endif
 
 	init_gdt();

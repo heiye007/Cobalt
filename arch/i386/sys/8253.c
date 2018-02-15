@@ -57,11 +57,11 @@ void timer_handler()
 
     if (lastlinedetect == 0)
     {
-       printf("Current row: %d , Current col: %d, lastlinedetect = %d, Detection Happened", old_row, old_col, lastlinedetect); 
+       printk("Current row: %d , Current col: %d, lastlinedetect = %d, Detection Happened", old_row, old_col, lastlinedetect); 
     }
     else
     {
-        printf("Current row: %d , Current col: %d, lastlinedetect = %d", old_row, old_col, lastlinedetect); 
+        printk("Current row: %d , Current col: %d, lastlinedetect = %d", old_row, old_col, lastlinedetect); 
     }
 
     settextcolor(WHITE, BLACK);
@@ -85,14 +85,14 @@ void timer_handler()
 
     if (minutes == 0)
     {
-        printf("Uptime: %d second(s)", seconds); 
+        printk("Uptime: %d second(s)", seconds); 
     }
     
     if (hours == 0)
     {
         if (minutes != 0)
         {
-            printf("Uptime: %d minute(s) and %d second(s)", minutes, seconds);
+            printk("Uptime: %d minute(s) and %d second(s)", minutes, seconds);
         }
     }
 
@@ -100,7 +100,7 @@ void timer_handler()
     {
         if (hours != 24)
         {
-            printf("Uptime: %d hour(s) %d minute(s) and %d second(s)", hours, minutes, seconds);
+            printk("Uptime: %d hour(s) %d minute(s) and %d second(s)", hours, minutes, seconds);
         }
     }
 
