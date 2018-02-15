@@ -1,5 +1,6 @@
 #include <i386/isr.h>
 #include <i386/shell.h>
+#include <i386/a20.h>
 #include <i386/8042.h>
 #include <i386/8253.h>
 #include <i386/8259.h>
@@ -21,6 +22,7 @@ extern uint32_t kernel_start;
 void init(unsigned long magic, multiboot_info_t *mbi)
 {
 	init_vga();
+	init_a20();
 
 #ifdef DBG_CPU
 	getCPUVendor();
