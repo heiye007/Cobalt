@@ -6,11 +6,9 @@
 #include <i386/kheap.h>
 #include <i386/gdt.h>
 #include <i386/paging.h>
-#include <i386/initrd.h>
 #include <i386/idt.h>
 #include <i386/irq.h>
 #include <i386/vga.h>
-#include <i386/fs.h>
 #include <multiboot.h>
 #include <i386/panic.h>
 #include <stdbool.h>
@@ -62,7 +60,8 @@ void init(unsigned long magic, multiboot_info_t *mbi)
     printf("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
     printf("PAGING size: %d \n",  high_pages);
 #endif
-
+    a20_enable();
+    printkok("Initialized A20");
 	init_gdt();
 	printkok("Initialized GDT");
 	init_idt();
@@ -77,58 +76,6 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	printkok("Initialized PIT");
 	init_keyboard();
 	printkok("Initialized Keyboard");
-
-	for (mmap = (multiboot_memory_map_t*) mbi->mmap_addr; (uint32_t) mmap < mbi->mmap_addr + mbi->mmap_length; mmap = (multiboot_memory_map_t*) ((uint32_t) mmap + mmap->size + sizeof(mmap->size))) {
-		printf("size = 0x%x, base_addr = 0x%x%x, length = 0x%x%x, type = 0x%x\n", (uint32_t) mmap->size, mmap->addr >> 32, mmap->addr & 0xFFFFFFFF, mmap->len >> 32, mmap->len & 0xFFFFFFFF, (uint32_t) mmap->type);		
-	}
-
-	printf("Mods count: %d\n", mbi->mods_count);
-
-	bool modules_exist = false;
-
-	if (mbi->mods_count > 0)
-	{
-		modules_exist = true;
-		fs_root = initialise_initrd(initrd_location);
-	}
-	else
-	{
-		printf("No Modules Found!");
-	}
-	
-	if (modules_exist == 1)
-	{
-		// list the contents of /
-		int i = 0;
-		struct dirent *node = 0;
-		while ( (node = readdir_fs(fs_root, i)) != 0)
-		{
-			printf("Found file ");
-			printf(node->name);
-			fs_node_t *fsnode = finddir_fs(fs_root, node->name);
-
-			if ((fsnode->flags&0x7) == FS_DIRECTORY)
-			{
-				printf("\n\t(directory)\n");
-			}
-			else
-			{
-				printf("\n\t contents: \"");
-				uint8_t buf[256];
-				uint32_t sz = read_fs(fsnode, 0, 256, buf);
-				unsigned int j;
-		
-				for (j = 0; j < sz; j++)
-				{
-					putch(buf[j]);
-				}
-
-				printf("\"\n");
-			}
-
-			i++;
-		}
-	}
 
 	// XXX: Legacy Paging Tester
 #ifdef DBG_PAGING_INIT
