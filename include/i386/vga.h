@@ -31,6 +31,7 @@ void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
 void cls(void);
 void printkcenter(char* c);
 void printkok(char *text);
+void printkfail(char *text);
 void putch(char c);
 void printk(char *text);
 void settextcolor(uint8_t forecolor, uint8_t backcolor);
