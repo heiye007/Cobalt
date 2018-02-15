@@ -1,4 +1,5 @@
 #include <i386/idt.h>
+#include <i386/vga.h>
 #include <i386/irq.h>
 #include <i386/isr.h>
 #include <string.h>
@@ -30,9 +31,11 @@ void init_idt(void)
 
     /* Init ISR's */
     init_isr();
+    printkok("Initialized ISRs");
 
     /* Init IRQ's */
     init_irq();
+    printkok("Initialized IRQs");
 
     /* Replace old IDT with the new one by 
        flushing all the changes */
