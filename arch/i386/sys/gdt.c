@@ -23,7 +23,7 @@ void init_gdt(void)
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
 
     /* Setup GDT pointer */
-    gp.base = (int) &gdt;
+    gp.base = (uint32_t) &gdt;
 
     /* GDT Null Descriptor */
     gdt_set_gate(0, 0, 0, 0, 0);
