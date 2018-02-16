@@ -3,7 +3,7 @@
 #include <i386/idt.h>
 #include <i386/panic.h>
 
-const char *exception_messages[] =
+static const char *exception_messages[] =
 {
     "Division By Zero",
     "Debug",
