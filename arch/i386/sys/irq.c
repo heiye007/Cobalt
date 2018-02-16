@@ -11,12 +11,16 @@ void *irq_routines[16] =
 
 void irq_install_handler(int irq, void (*handler))
 {
+	__asm__ __volatile__ ("cli");
     irq_routines[irq] = handler;
+	__asm__ __volatile__ ("sti");
 }
 
 void irq_uninstall_handler(int irq)
 {
+	__asm__ __volatile__ ("cli");
     irq_routines[irq] = 0;
+    __asm__ __volatile__ ("sti");
 }
 
 void irq_remap(void)
