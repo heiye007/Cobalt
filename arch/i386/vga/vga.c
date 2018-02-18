@@ -207,7 +207,7 @@ void settextcolor(uint8_t forecolor, uint8_t backcolor)
     attrib = (backcolor << 4) | (forecolor & 0x0F);
 }
 
-void init_vga(void)
+void setup_text_mode(void)
 {
     disable_cursor();
     cls();

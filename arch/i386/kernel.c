@@ -10,8 +10,9 @@
 #include <i386/idt.h>
 #include <i386/irq.h>
 #include <i386/vga.h>
-#include <multiboot.h>
 #include <i386/panic.h>
+#include <i386/gfx.h>
+#include <multiboot.h>
 #include <stdbool.h>
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
@@ -21,7 +22,7 @@ extern uint32_t kernel_start;
 
 void init(unsigned long magic, multiboot_info_t *mbi)
 {
-	init_vga();
+	init_text_mode();
 	init_a20();
 
 #ifdef DBG_CPU

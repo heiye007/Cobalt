@@ -1,4 +1,5 @@
 #include <i386/vga.h>
+#include <i386/gfx.h>
 #include <i386/8042.h>
 #include <string.h>
 #include <stdint.h>
@@ -72,6 +73,14 @@ uint32_t shell()
       int b = 0;
       int c = a/b;
       printk("%d", c);
+    }
+    else if (!strcmp(cmd, "vbe"))
+    {
+      extern unsigned char g_320x200x256[];
+      init_vbe(g_320x200x256);
+      vbe_clear_screen(9);
+      vbe_draw_rectangle(0,0,320,10,8); // Title Bar
+      vbe_printk("cobalt vbe test", 0);
     }
     else
     {

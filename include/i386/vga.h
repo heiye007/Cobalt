@@ -35,7 +35,7 @@ void printkfail(char *text);
 void putch(char c);
 void print(char *text);
 void settextcolor(uint8_t forecolor, uint8_t backcolor);
-void init_vga(void);
+void setup_text_mode(void);
 void printkint(const int number);
 void printkdec(uint16_t n);
 void printkhex(const uint16_t number);
