@@ -22,12 +22,6 @@ struct gdt_ptr
     uint16_t base;
 } __attribute__((packed));
 
-/* GDT structure */
-struct gdt_entry gdt[5];
-
-/* GDT pointer */
-struct gdt_ptr gp;
-
 /* cake: Function declared on another file
    to reload the segment registers and swap
    out CPU's GDT table with ours */

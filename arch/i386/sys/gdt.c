@@ -1,5 +1,11 @@
 #include <i386/gdt.h>
 
+/* GDT structure */
+struct gdt_entry gdt[5];
+
+/* GDT pointer */
+struct gdt_ptr gp;
+
 /* Function to craft a descriptor for the Global Descriptor Table */
 void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gran)
 {
