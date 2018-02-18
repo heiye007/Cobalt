@@ -168,7 +168,7 @@ uint32_t vbe_printk(char *message, uint32_t line)
         {
             line++;
             x = 0;
-            *message++;
+            message++;
             continue;
         }
 
@@ -179,7 +179,7 @@ uint32_t vbe_printk(char *message, uint32_t line)
         }
 
         vbe_putchar(*message, line, x);
-        *message++;
+        message++;
         x++;
     }
 
