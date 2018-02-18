@@ -11,6 +11,7 @@
 #include <i386/irq.h>
 #include <i386/vga.h>
 #include <i386/panic.h>
+#include <i386/tss.h>
 #include <i386/gfx.h>
 #include <multiboot.h>
 #include <stdbool.h>

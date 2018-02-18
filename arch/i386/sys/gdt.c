@@ -1,7 +1,9 @@
 #include <i386/gdt.h>
+#include <i386/tss.h>
+#include <i386/vga.h>
 
 /* GDT structure */
-struct gdt_entry gdt[5];
+struct gdt_entry gdt[6];
 
 /* GDT pointer */
 struct gdt_ptr gp;
@@ -26,7 +28,7 @@ void gdt_set_gate(int num, size_t base, size_t limit, uint8_t access, uint8_t gr
 void init_gdt(void)
 {
 	/* Setup GDT limit */
-    gp.limit = (sizeof(struct gdt_entry) * 5) - 1;
+    gp.limit = (sizeof(struct gdt_entry) * 6) - 1;
 
     /* Setup GDT pointer */
     gp.base = (uint32_t) &gdt;
@@ -55,7 +57,14 @@ void init_gdt(void)
     // Segment Type: Code
     gdt_set_gate(4, 0, 0xffffffff, 0xF2, 0xCF);
 
+    /* Write TSS Info on the GDT Table */
+    write_tss(5, 0x10, 0x0);
+
     /* Replace old GDT with the new one by 
        flushing all the changes */
     gdt_flush((uint32_t)&gp);
+
+    /* Flush Task State Segment */
+    tss_flush();
+    printkok("Initialized TSS");
 }

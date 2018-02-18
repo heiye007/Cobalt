@@ -3,4 +3,4 @@ OBJS:= $(OBJS) arch/$(ARCH)/libk/string.o arch/$(ARCH)/libk/stdio.o arch/$(ARCH)
 OBJS:= $(OBJS) arch/$(ARCH)/sys/isrs.o arch/$(ARCH)/sys/irq.o arch/$(ARCH)/sys/irqs.o arch/$(ARCH)/sys/8253.o arch/$(ARCH)/sys/8259.o
 OBJS:= $(OBJS) arch/$(ARCH)/keyboard/8042.o arch/$(ARCH)/sys/cpu.o arch/$(ARCH)/sys/panic.o arch/$(ARCH)/mm/kframe.o arch/$(ARCH)/mm/kheap.o 
 OBJS:= $(OBJS) arch/$(ARCH)/mm/kmalloc_early.o arch/$(ARCH)/mm/paging.o arch/$(ARCH)/usr/shell.o arch/$(ARCH)/sys/a20.o arch/$(ARCH)/sys/a20s.o arch/$(ARCH)/vbe/vbe.o
-OBJS:= $(OBJS) arch/$(ARCH)/sys/gfx.o
+OBJS:= $(OBJS) arch/$(ARCH)/sys/gfx.o arch/$(ARCH)/sys/tss.o arch/$(ARCH)/sys/tsss.o
