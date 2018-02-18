@@ -57,5 +57,5 @@ void init_gdt(void)
 
     /* Replace old GDT with the new one by 
        flushing all the changes */
-    gdt_flush();
+    gdt_flush((uint32_t)&gp);
 }

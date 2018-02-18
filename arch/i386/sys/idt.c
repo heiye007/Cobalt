@@ -29,6 +29,10 @@ void init_idt(void)
     /* Clear the IDT by zeroing out it */
     memset(&idt, 0, sizeof(struct idt_entry) * 256);
 
+    /* Remap IRQ table */
+    irq_remap();
+    printkok("Remapped IRQs");
+
     /* Init ISR's */
     init_isr();
     printkok("Initialized ISRs");
@@ -39,8 +43,9 @@ void init_idt(void)
 
     /* Replace old IDT with the new one by 
        flushing all the changes */
-    idt_load();
+    idt_flush((uint32_t)&idtp);
 
     /* Enable Interrupts */
     __asm__ __volatile__ ("sti");
+    printkok("Enabled Interrupts");
 }

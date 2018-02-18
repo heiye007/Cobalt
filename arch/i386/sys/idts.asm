@@ -1,5 +1,6 @@
-global idt_load	; Allow 'idt_load' to be called from C
-extern idtp		; idtp is declared on C code
-idt_load:
-    lidt [idtp]	; Load the IDT with our idtp pointer
-    ret			; Return to C code
+[GLOBAL idt_flush]	; Allow 'idt_flush' to be called from C
+
+idt_flush:
+   mov eax, [esp+4]
+   lidt [eax]		; Load the IDT with out pointer
+   ret
