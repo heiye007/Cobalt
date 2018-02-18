@@ -41,6 +41,14 @@ void init_gdt(void)
     // Rest is same as Code Segment
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
+    /* GDT Code Segment */
+    // Segment Type: Code
+    gdt_set_gate(3, 0, 0xffffffff, 0xFA, 0xCF);
+
+    /* GDT Code Segment */
+    // Segment Type: Code
+    gdt_set_gate(4, 0, 0xffffffff, 0xF2, 0xCF);
+
     /* Replace old GDT with the new one by 
        flushing all the changes */
     gdt_flush();

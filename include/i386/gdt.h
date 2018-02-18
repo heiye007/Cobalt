@@ -23,7 +23,7 @@ struct gdt_ptr
 } __attribute__((packed));
 
 /* GDT structure */
-struct gdt_entry gdt[3];
+struct gdt_entry gdt[5];
 
 /* GDT pointer */
 struct gdt_ptr gp;
