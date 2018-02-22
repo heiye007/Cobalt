@@ -98,7 +98,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     }
 
     // Before we enable paging, we must register our page fault handler.
-    irq_install_handler(14, page_fault);
+    irq_install_handler(14, x86_pagefault_handler);
 
     if(ident_addr)
     {
@@ -191,7 +191,7 @@ void unmap_kernel_page(uint32_t address)
     }
 }
 
-void page_fault(struct regs* r)
+void x86_pagefault_handler(struct regs* r)
 {
     disable_cursor();
     // A page fault has occurred.
