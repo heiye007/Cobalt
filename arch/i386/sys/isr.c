@@ -3,42 +3,6 @@
 #include <i386/idt.h>
 #include <i386/panic.h>
 
-static const char *exception_messages[] =
-{
-    "Division By Zero",
-    "Debug",
-    "Non Maskable Interrupt",
-    "Breakpoint",
-    "Into Detected Overflow",
-    "Out of Bounds",
-    "Invalid Opcode",
-    "No Coprocessor",
-    "Double Fault",
-    "Coprocessor Segment Overrun",
-    "Bad TSS",
-    "Segment Not Present",
-    "Stack Fault",
-    "General Protection Fault",
-    "Page Fault",
-    "Unknown Interrupt",
-    "Coprocessor Fault",
-    "Alignment Check",
-    "Machine Check",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
-};
-
 void init_isr(void)
 {
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
@@ -75,14 +39,24 @@ void init_isr(void)
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
 }
 
-void fault_handler(struct regs *r)
+void x86_exception_handler(struct regs *r)
 {
-    if (r->int_no != 14)
+    switch (r->int_no)
     {
-        PANIC(exception_messages[r->int_no]);
-    }
-    else
-    {
-        page_fault(r);
+        case X86_INT_DIVISION_BY_ZERO:
+            x86_division_by_zero(r);
+            break;
+        case X86_INT_BREAKPOINT:
+            x86_breakpoint_handler(r);
+            break;
+        case X86_INT_PAGE_FAULT:
+            x86_pagefault_handler(r);
+            break;
+        case X86_INT_GP_FAULT:
+            x86_gp_fault_handler(r);
+            break;
+        default:
+            x86_unhandled_exception(r);
+            break;
     }
 }

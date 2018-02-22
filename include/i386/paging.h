@@ -79,6 +79,6 @@ void unmap_kernel_page(uint32_t address);
 /**
  * Handler for page faults.
  */
-void page_fault();
+void x86_pagefault_handler();
 
 #endif

@@ -1,5 +1,66 @@
 #include <stdint.h>
 
+static const char *x86_exception_messages[] =
+{
+    "Divide-by-zero Error",
+    "Debug",
+    "Non-maskable Interrupt",
+    "Breakpoint",
+    "Overflow",
+    "Bound Range Exceeded",
+    "Invalid Opcode",
+    "Device Not Available",
+    "Double Fault",
+    "Coprocessor Segment Overrun",
+    "Invalid TSS",
+    "Segment Not Present",
+    "Stack-Segment Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Unknown Interrupt",
+    "x87 Floating-Point Exception",
+    "Alignment Check",
+    "Machine Check",
+    "SIMD Floating-Point Exception",
+    "Virtualization Exception",
+    "Reserved",
+    "Security Exception",
+    "Reserved",
+    "Triple Fault",
+    "FPU Error Interrupt",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved"
+};
+
+enum x86_interrupts
+{
+	X86_INT_DIVISION_BY_ZERO	= 0,
+	X86_INT_DEBUG,
+	X86_INT_NMI,
+	X86_INT_BREAKPOINT,
+	X86_INT_OVERFLOW,
+	X86_INT_OUT_OF_BOUNDS,
+	X86_INT_INVALID_OPCODE,
+	X86_INT_DEVICE_NA,
+	X86_INT_DOUBLE_FAULT,
+	X86_INT_INVALID_TSS			= 0xA,
+	X86_INT_SEGMENT_NOT_PRESENT,
+	X86_INT_STACK_FAULT,
+	X86_INT_GP_FAULT,
+	X86_INT_PAGE_FAULT,
+	X86_INT_FPU_EXCEPTION		= 0x10,
+	X86_INT_ALIGNMENT_CHECK,
+	X86_INT_MACHINE_CHECK,
+	X86_INT_SIMD_FP_EXCEPTION,
+	X86_INT_VIRT_EXCEPTION,
+	X86_INT_SECURITY_EXCEPTION	= 0x1E,
+	X86_INT_MAX_INTEL			= 0x1F,
+};
+
 extern void isr0();
 extern void isr1();
 extern void isr2();
