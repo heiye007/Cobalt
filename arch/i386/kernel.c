@@ -20,10 +20,15 @@
 
 extern uint32_t kernel_end;
 extern uint32_t kernel_start;
+unsigned int initial_esp;
 
-void init(unsigned long magic, multiboot_info_t *mbi)
+void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack)
 {
+	initial_esp = initial_stack;
+
 	init_text_mode();
+
+	printk("initial_esp : 0x%x\n", initial_esp);
 	init_a20();
 
 #ifdef DBG_CPU
@@ -32,7 +37,7 @@ void init(unsigned long magic, multiboot_info_t *mbi)
 	getCPUArch();
 	getCPUName();
 #endif
-	
+
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
 

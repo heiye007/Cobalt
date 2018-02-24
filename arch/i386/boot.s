@@ -29,13 +29,15 @@ _start:
     pushl %esp
     pushl $0
     popf
-    pushl %ebx
-    pushl %eax
+
+    pushl %esp # arg[3]: Initial Kernel ESP
+    pushl %ebx # arg[2]: MBI Kernel Struct
+    pushL %eax # arg[1]: Multiboot Magic Number
 
     cli
     call init
+    jmp hang
 
-    cli
 hang:
     hlt
     jmp hang
