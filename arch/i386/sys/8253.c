@@ -7,7 +7,7 @@ extern void irq_install_handler(int irq, void (*handler));
 
 /* timer_ticks keeps track of all the ticks that
    will happen since PIT initialization */
-int timer_ticks = 0;
+uint32_t timer_ticks = 0;
 
 /* cake: We should code a suitable RTC driver
    for handling clock operations */
@@ -125,6 +125,11 @@ void timer_handler()
     }
 #endif
 
+}
+
+uint32_t get_ticks()
+{
+	return timer_ticks;
 }
 
 /* Function to wait 'x' ticks */
