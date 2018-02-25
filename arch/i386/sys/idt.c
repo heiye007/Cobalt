@@ -11,6 +11,11 @@ void idt_set_gate(uint8_t num, size_t base, unsigned short sel, uint8_t flags)
     idt[num].base_hi = (base >> 16) & 0xFFFF;
     idt[num].sel = sel;
     idt[num].always0 = 0;
+    /* cakeh: When we finally implement Ring 3 jumping
+       (Usermode), we need to add an 'OR' on the flag
+       of every IDT Gate to ensure we don't get a
+       General Protection Fault, Example Code:
+       idt[num].flags = flags | 0x60; */
     idt[num].flags = flags;
 }
 
