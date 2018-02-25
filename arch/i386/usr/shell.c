@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 int lastlinedetect;
+int i;
 
 uint32_t shell()
 {
@@ -95,16 +96,48 @@ uint32_t shell()
       getCPUArch();
       getCPUName();
     }
-    else if (!strcmp(cmd, "sysinfo"))
+    else if (!strcmp(cmd, "kmalloc"))
     {
-      extern uint32_t x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_ramsize;
+      i = kmalloc(sizeof(uint32_t));
+    }
+    else if (!strcmp(cmd, "kfree"))
+    {
+      kfree(i);
+    }
+    else if (!strcmp(cmd, "debug"))
+    {
+      extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_ramsize;
       printk("Initial Stack Pointer: 0x%x\n", x86_initial_esp);
       printk("Kernel base: 0x%x , Kernel end: 0x%x\n", &x86_kernel_start, &x86_kernel_end);
       printk("Number of available RAM: %d MB \n",  x86_ramsize);
-      getCPUVendor();
-      getCPUFeatures();
-      getCPUArch();
-      getCPUName();
+      printk("Heap base: 0x%x , Heap end: 0x%x . Contains ", x86_memoryhead, x86_memoryend);
+
+      if(x86_total_bytes / 1024 / 1024 > 0)
+      {
+        printk("%d MiB.\nCurrent allocations: [%d]\n", x86_total_bytes / 1024 / 1024, x86_byte_allocations);
+      }
+      else if(x86_total_bytes / 1024 > 0)
+      {
+        printk("%d KiB.\nCurrent allocations: [%d]\n", x86_total_bytes / 1024, x86_byte_allocations);
+      }
+      else
+      {
+        printk("%d B.\nCurrent allocations: [%d]\n", x86_total_bytes, x86_byte_allocations);
+      }
+
+      if(x86_free_bytes / 1024 / 1024 > 0)
+      {
+        printk("Free: [%d MiB]\n", x86_free_bytes / 1024 / 1024);
+      }
+      else if(x86_free_bytes / 1024 > 0)
+      {
+        printk("Free: [%d KiB]\n", x86_free_bytes / 1024);
+      }
+      else
+      {
+        printk("Free: [%d Bytes]\n", x86_free_bytes);
+      }
+
     }
     else
     {

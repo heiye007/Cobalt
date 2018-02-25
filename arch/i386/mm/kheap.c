@@ -25,62 +25,29 @@ struct footer
 	uint32_t size;
 };
 
-char *memoryhead;
-char *memoryend; // 'memoryend' must always be page aligned.
+char *x86_memoryhead;
+char *x86_memoryend; // 'x86_memoryend' must always be page aligned.
 
 struct free_header *head;
 
-uint32_t allocations = 0;
+uint32_t x86_byte_allocations = 0;
 uint32_t heap_free = 0;
+uint32_t x86_total_bytes = 0;
+uint32_t x86_free_bytes;
 
 static void do_kfree(void *p);
 
 void malloc_stats()
 {
+	x86_total_bytes = x86_memoryend - x86_memoryhead;
 
-#ifdef DBG_HEAP
-	printk("Heap starts @ 0x%x ends @ 0x%x and contains ", memoryhead, memoryend);
-#endif
-
-#ifdef DBG_HEAP
-	uint32_t bytes = memoryend - memoryhead;
-	
-	if(bytes / 1024 / 1024 > 0)
-	{
-		printk("%d MiB.\nCurrent allocations: [%d]\n", bytes / 1024 / 1024, allocations);
-	}
-	else if(bytes / 1024 > 0)
-	{
-		printk("%d KiB.\nCurrent allocations: [%d]\n", bytes / 1024, allocations);
-	}
-	else
-	{
-		printk("%d B.\nCurrent allocations: [%d]\n", bytes, allocations);
-	}
-#endif
-
-	uint32_t free = 0;
+	x86_free_bytes = 0;
 	struct free_header *current = head;
 	while(current)
 	{
-		free += current->h.size;
+		x86_free_bytes += current->h.size;
 		current = current->next;
 	}
-
-#ifdef DBG_HEAP
-	if(free / 1024 / 1024 > 0)
-	{
-		printk("Free: [%d MiB]\n", free / 1024 / 1024);
-	}
-	else if(free / 1024 > 0)
-	{
-		printk("Free: [%d KiB]\n", free / 1024);
-	
-	else
-	{
-		printk("Free: [%d Bytes]\n", free);
-	}
-#endif
 }
 
 static struct header *set_header_footer(char *block, uint32_t block_size)
@@ -114,7 +81,7 @@ static void expand(uint32_t at_least)
 
 	// Number of frames we're going to map.
 	uint32_t num_frames = size / 0x1000;
-	char *block_header = memoryend;
+	char *block_header = x86_memoryend;
 
 	uint32_t i;
 	// If we're mapping more than one frame, we may end up with fewer than we asked for.
@@ -123,7 +90,7 @@ static void expand(uint32_t at_least)
 
 	for(i = 0; i < num_frames; i++)
 	{
-		struct page *page = map_kernel_page((uint32_t)memoryend, 0);
+		struct page *page = map_kernel_page((uint32_t)x86_memoryend, 0);
 
 		if(page == NULL)
 		{
@@ -131,7 +98,7 @@ static void expand(uint32_t at_least)
 			break;
 		}
 		
-		memoryend += 0x1000;
+		x86_memoryend += 0x1000;
 		actually_allocated += 0x1000;
 	}
 
@@ -147,10 +114,10 @@ static void expand(uint32_t at_least)
 
 void initialize_kheap(uint32_t start_addr)
 {
-	memoryhead = (char *)start_addr;
-	memoryend = memoryhead + INITIAL_HEAP_SIZE;
-	set_header_footer(memoryhead, INITIAL_HEAP_SIZE);
-	head = (struct free_header *)memoryhead;
+	x86_memoryhead = (char *)start_addr;
+	x86_memoryend = x86_memoryhead + INITIAL_HEAP_SIZE;
+	set_header_footer(x86_memoryhead, INITIAL_HEAP_SIZE);
+	head = (struct free_header *)x86_memoryhead;
 	head->next = NULL;
 	head->prev = NULL;
 	heap_free = head->h.size;
@@ -276,7 +243,7 @@ void *kmalloc_ap(uint32_t size, uint8_t align, uint32_t *phys)
 		return NULL;
 	}
 
-	if(memoryhead == NULL)
+	if(x86_memoryhead == NULL)
 	{
 		PANIC("kheap: not initialized");
 	}
@@ -371,7 +338,7 @@ void *kmalloc_ap(uint32_t size, uint8_t align, uint32_t *phys)
 	block_footer->size = needed_size;
 
 	// We have oficcially made an allocation.
-	allocations++;
+	x86_byte_allocations++;
 	heap_free -= block->h.size;
 
 	char *return_addr = ((char *)block) + sizeof (struct header);
@@ -389,7 +356,7 @@ static struct free_header *get_previous_block(struct header *block_head)
 {
 	char *block = (char *)block_head;
 
-	if(block == memoryhead)
+	if(block == x86_memoryhead)
 	{
 		/* Heap location is at the first available location,
 		there's no free block. */
@@ -413,7 +380,7 @@ static struct free_header *get_next_block(struct header *block_head)
 	char *block = (char *)block_head;
 	void *nextblock = block + block_head->size;
 
-	if(nextblock == memoryend)
+	if(nextblock == x86_memoryend)
 	{
 		return NULL;
 	}
@@ -542,7 +509,7 @@ static void do_kfree(void *p)
 static int unmap_blocks()
 {
 	// Check if last block is a page's size large.
-	struct footer *f = (struct footer *)(memoryend - sizeof (struct footer));
+	struct footer *f = (struct footer *)(x86_memoryend - sizeof (struct footer));
 
 	if(f->size < 0x1000)
 	{
@@ -550,7 +517,7 @@ static int unmap_blocks()
 		return 0;
 	}
 
-	struct header *h = (struct header *)(memoryend - f->size);
+	struct header *h = (struct header *)(x86_memoryend - f->size);
 		
 	if(!h->free)
 	{
@@ -558,7 +525,7 @@ static int unmap_blocks()
 		return 0;
 	}
 
-	char *page_addr = memoryend - 0x1000;
+	char *page_addr = x86_memoryend - 0x1000;
 		
 	if(page_addr < (char *)h
 		|| (uint32_t)(page_addr - (char *)h) < (sizeof (struct free_header) + sizeof (struct footer)))
@@ -569,10 +536,10 @@ static int unmap_blocks()
 
 	// A page can be freed.
 	uint32_t newsize = h->size - 0x1000;
-	memoryend -= 0x1000;
+	x86_memoryend -= 0x1000;
 	heap_free -= 0x1000;
 	set_header_footer((char *)h, newsize);
-	unmap_kernel_page((uint32_t)memoryend);
+	unmap_kernel_page((uint32_t)x86_memoryend);
 	// Return 1 if succeeded.
 	return 1;
 }
@@ -580,6 +547,6 @@ static int unmap_blocks()
 void kfree(void *p)
 {
 	do_kfree(p);
-	allocations--;
+	x86_byte_allocations--;
 	while(unmap_blocks()){}
 }
