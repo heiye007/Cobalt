@@ -135,22 +135,24 @@ void printkcenter(char* c)
 
 void printkok(char *text)
 {
-    print("[ ");
-    settextcolor(10, 0);
-    print(" OK ");
-    settextcolor(15, 0);
-    print(" ] ");
-    printk("%s\n", text);
+    printk("%s", text);
+    update_cursor(WIDTH-6, get_col());
+    printk("[ ");
+    settextcolor(GREEN, BLACK);
+    printk("OK");
+    settextcolor(WHITE, BLACK);
+    printk(" ]");
 }
 
 void printkfail(char *text)
 {
-    print("[ ");
-    settextcolor(10, 0);
-    print("FAIL");
-    settextcolor(15, 0);
-    print(" ] ");
-    printk("%s\n", text);
+    printk("%s", text);
+    update_cursor(WIDTH-6, get_col());
+    printk("[");
+    settextcolor(RED, BLACK);
+    printk("FAIL");
+    settextcolor(WHITE, BLACK);
+    printk("]");
 }
 
 void putch(char c)
