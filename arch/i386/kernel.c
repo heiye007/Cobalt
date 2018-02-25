@@ -81,13 +81,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 	printkok("Initialized PIT");
 	init_keyboard();
 	printkok("Initialized Keyboard");
-
-	// XXX: Legacy Paging Tester
-#ifdef DBG_PAGING_INIT
-	unsigned int *ptr = (unsigned int*)0xA0000000;
-   	unsigned int do_page_fault = *ptr;
-#endif
-
 	shell();
 
 	/* XXX: Kernel can't reach this zone,

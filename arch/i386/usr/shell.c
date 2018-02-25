@@ -82,6 +82,11 @@ uint32_t shell()
       vbe_draw_rectangle(0,0,320,10,8); // Title Bar
       vbe_printk("cobalt vbe test", 0);
     }
+    else if (!strcmp(cmd, "pagefault"))
+    {
+      unsigned int *ptr = (unsigned int*)0xA0000000;
+      unsigned int do_page_fault = *ptr;
+    }
     else
     {
       printk("Unknown command: %s\n", cmd);
