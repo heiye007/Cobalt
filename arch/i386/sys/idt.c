@@ -49,7 +49,8 @@ void init_idt(void)
     /* Replace old IDT with the new one by 
        flushing all the changes */
     idt_flush((uint32_t)&idtp);
-
+    printkok("Initialized IDT");
+    
     /* Enable Interrupts */
     __asm__ __volatile__ ("sti");
     printkok("Enabled Interrupts");

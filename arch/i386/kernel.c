@@ -61,19 +61,12 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 #endif
 
 	init_gdt();
-	printkok("Initialized GDT");
 	init_idt();
-	printkok("Initialized IDT");
 	initialize_paging(total_frames, 0, 0);
-	printkok("Initialized Paging");
 	malloc_stats();
-	printkok("Initialized Memory Management Engine");
 	pic_init();
-	printkok("Initialized PIC");
 	pit_init();
-	printkok("Initialized PIT");
 	init_keyboard();
-	printkok("Initialized Keyboard");
 	shell();
 
 	/* XXX: Kernel can't reach this zone,

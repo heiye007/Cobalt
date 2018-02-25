@@ -102,4 +102,5 @@ char getch(void)
 void init_keyboard(void)
 {
     irq_install_handler(1, keyboard_handler);
+    printkok("Initialized PS2 Keyboard");
 }

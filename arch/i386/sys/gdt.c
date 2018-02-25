@@ -67,4 +67,5 @@ void init_gdt(void)
     /* Flush Task State Segment */
     tss_flush();
     printkok("Initialized TSS");
+    printkok("Initialized GDT");
 }

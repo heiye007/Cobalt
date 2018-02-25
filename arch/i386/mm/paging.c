@@ -119,6 +119,8 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
 #ifdef DBG_PAGING
     printk("[PAGING] Kernel heap initialized\n");
 #endif
+
+    printkok("Initialized Paging");
 }
 
 void switch_page_directory(struct page_directory *dir)
