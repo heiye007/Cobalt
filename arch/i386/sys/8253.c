@@ -149,5 +149,5 @@ void pit_init(void)
 {
     irq_install_handler(0, timer_handler);
     timer_phase(100); // Set to 100Hz
-    printkok("Initialized PIT");
+    printkok("Initialized PIT (8253)");
 }
