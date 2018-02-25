@@ -18,10 +18,8 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-extern uint32_t kernel_end;
-extern uint32_t kernel_start;
-unsigned int initial_esp;
-uint32_t x86_ramsize;
+extern uint32_t kernel_end, kernel_start;
+uint32_t x86_ramsize, initial_esp;
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack)
 {
@@ -37,7 +35,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
     uint32_t total_frames = high_pages + low_pages;
-
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
     x86_ramsize = mbi->mem_upper / 1024 + 2;
 
