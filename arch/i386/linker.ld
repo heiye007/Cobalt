@@ -33,4 +33,5 @@ SECTIONS
     }
     
     x86_kernel_end = .;
+    x86_kernel_size = x86_kernel_end - x86_kernel_start;
 }
