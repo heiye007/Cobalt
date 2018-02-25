@@ -64,8 +64,8 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 	init_idt();
 	initialize_paging(total_frames, 0, 0);
 	malloc_stats();
-	pic_init();
 	pit_init();
+	pic_init();
 	init_8042_keyboard();
 	shell();
 
