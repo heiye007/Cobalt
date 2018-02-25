@@ -87,6 +87,13 @@ uint32_t shell()
       unsigned int *ptr = (unsigned int*)0xA0000000;
       unsigned int do_page_fault = *ptr;
     }
+    else if (!strcmp(cmd, "cpuinfo"))
+    {
+      getCPUVendor();
+      getCPUFeatures();
+      getCPUArch();
+      getCPUName();
+    }
     else
     {
       printk("Unknown command: %s\n", cmd);

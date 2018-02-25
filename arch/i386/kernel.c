@@ -31,13 +31,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 	printk("initial_esp : 0x%x\n", initial_esp);
 	init_a20();
 
-#ifdef DBG_CPU
-	getCPUVendor();
-	getCPUFeatures();
-	getCPUArch();
-	getCPUName();
-#endif
-
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
 
