@@ -21,6 +21,7 @@
 extern uint32_t kernel_end;
 extern uint32_t kernel_start;
 unsigned int initial_esp;
+uint32_t x86_ramsize;
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack)
 {
@@ -38,6 +39,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
     uint32_t total_frames = high_pages + low_pages;
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
+    x86_ramsize = mbi->mem_upper / 1024 + 2;
 
     while(mmap < mbi->mmap_addr + mbi->mmap_length)
     {
@@ -45,14 +47,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
     }
 
 	init_text_mode();
-
-#ifdef DBG_INIT
-	printk("Initial Stack Pointer: 0x%x\n", initial_esp);
-	printk("Kernel base: 0x%x . Kernel end: 0x%x\n", &kernel_start, &kernel_end);
-    printk("Number of available RAM: %d MB \n",  mbi->mem_upper / 1024 + 2);
-    printk("Number of available pages: %d \n",  high_pages);
-#endif
-
 	init_a20();
 	init_gdt();
 	init_idt();

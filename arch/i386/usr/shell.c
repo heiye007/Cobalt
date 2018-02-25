@@ -1,6 +1,7 @@
 #include <i386/vga.h>
 #include <i386/gfx.h>
 #include <i386/8042.h>
+#include <multiboot.h>
 #include <string.h>
 #include <stdint.h>
 
@@ -89,6 +90,17 @@ uint32_t shell()
     }
     else if (!strcmp(cmd, "cpuinfo"))
     {
+      getCPUVendor();
+      getCPUFeatures();
+      getCPUArch();
+      getCPUName();
+    }
+    else if (!strcmp(cmd, "sysinfo"))
+    {
+      extern uint32_t initial_esp, kernel_end, kernel_start, x86_ramsize;
+      printk("Initial Stack Pointer: 0x%x\n", initial_esp);
+      printk("Kernel base: 0x%x , Kernel end: 0x%x\n", &kernel_start, &kernel_end);
+      printk("Number of available RAM: %d MB \n",  x86_ramsize);
       getCPUVendor();
       getCPUFeatures();
       getCPUArch();
