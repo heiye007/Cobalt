@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <types.h>
 
-extern uint32_t kernel_end;
-uint32_t placement_address = (uint32_t)&kernel_end;
+extern uint32_t x86_kernel_end;
+uint32_t placement_address = (uint32_t)&x86_kernel_end;
 uint8_t enabled = 1;
 
 static uint32_t kmalloc_imp(uint32_t sz, int align, uint32_t *phys)

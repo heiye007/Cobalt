@@ -42,6 +42,6 @@ hang:
     hlt
     jmp hang
 
-.section .kend
-.global kernel_end
-kernel_end:
+.section .x86_kend
+.global x86_kernel_end
+x86_kernel_end:

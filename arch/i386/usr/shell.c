@@ -97,9 +97,9 @@ uint32_t shell()
     }
     else if (!strcmp(cmd, "sysinfo"))
     {
-      extern uint32_t initial_esp, kernel_end, kernel_start, x86_ramsize;
-      printk("Initial Stack Pointer: 0x%x\n", initial_esp);
-      printk("Kernel base: 0x%x , Kernel end: 0x%x\n", &kernel_start, &kernel_end);
+      extern uint32_t x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_ramsize;
+      printk("Initial Stack Pointer: 0x%x\n", x86_initial_esp);
+      printk("Kernel base: 0x%x , Kernel end: 0x%x\n", &x86_kernel_start, &x86_kernel_end);
       printk("Number of available RAM: %d MB \n",  x86_ramsize);
       getCPUVendor();
       getCPUFeatures();

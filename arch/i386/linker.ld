@@ -2,7 +2,7 @@ ENTRY(_start)
 SECTIONS
 {
     . = 1M;
-    kernel_start = .;
+    x86_kernel_start = .;
 
     .text BLOCK(4K) : ALIGN(4K)
     {
@@ -27,10 +27,10 @@ SECTIONS
         *(.bootstrap_stack)
     }
 
-    .kend BLOCK(4K) : ALIGN(4K)
+    .x86_kend BLOCK(4K) : ALIGN(4K)
     {
-        *(.kend)
+        *(.x86_kend)
     }
     
-    kernel_end = .;
+    x86_kernel_end = .;
 }

@@ -18,12 +18,12 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-extern uint32_t kernel_end, kernel_start;
-uint32_t x86_ramsize, initial_esp;
+extern uint32_t x86_kernel_start, x86_kernel_end;
+uint32_t x86_ramsize, x86_initial_esp;
 
-void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack)
+void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
-	initial_esp = initial_stack;
+	x86_initial_esp = initial_boot_stack;
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
