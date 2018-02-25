@@ -20,6 +20,7 @@ void pic_init(void)
 #ifdef DBG_PIT
     printk("Started PIT successfully...\n");
 #endif
+    printkok("Initialized PIC (8259)");
 }
 
 void pic_send_eoi(uint8_t irq)
