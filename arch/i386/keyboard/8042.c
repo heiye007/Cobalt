@@ -99,7 +99,7 @@ char getch(void)
   return curr_char;
 }
 
-void init_keyboard(void)
+void init_8042_keyboard(void)
 {
     irq_install_handler(1, keyboard_handler);
     printkok("Initialized PS2 Keyboard");

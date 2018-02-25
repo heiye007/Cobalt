@@ -66,7 +66,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 	malloc_stats();
 	pic_init();
 	pit_init();
-	init_keyboard();
+	init_8042_keyboard();
 	shell();
 
 	/* XXX: Kernel can't reach this zone,
