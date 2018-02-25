@@ -26,27 +26,16 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
 {
 	initial_esp = initial_stack;
 
-	init_text_mode();
-
-	printk("initial_esp : 0x%x\n", initial_esp);
-	init_a20();
-
-	uint32_t low_pages = 256;
-    uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
-
-    uint32_t total_frames = high_pages + low_pages;
-
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
-		printk("Invalid magic number: 0x%x\n", (unsigned) magic);
 		__asm__ __volatile__ ("cli");
 		__asm__ __volatile__ ("hlt");
 		return;
 	}
 
-#ifdef DBG_INIT
-	printk("Kernel base is 0x%x, end is 0x%x\n", &kernel_start, &kernel_end);
-#endif
+	uint32_t low_pages = 256;
+    uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
+    uint32_t total_frames = high_pages + low_pages;
 
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
 
@@ -55,11 +44,16 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_stack
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
+	init_text_mode();
+
 #ifdef DBG_INIT
-    printk("RAM size: %d MB \n",  mbi->mem_upper / 1024 + 2);
-    printk("PAGING size: %d \n",  high_pages);
+	printk("Initial Stack Pointer: 0x%x\n", initial_esp);
+	printk("Kernel base: 0x%x . Kernel end: 0x%x\n", &kernel_start, &kernel_end);
+    printk("Number of available RAM: %d MB \n",  mbi->mem_upper / 1024 + 2);
+    printk("Number of available pages: %d \n",  high_pages);
 #endif
 
+	init_a20();
 	init_gdt();
 	init_idt();
 	initialize_paging(total_frames, 0, 0);
