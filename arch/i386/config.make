@@ -1,3 +1,3 @@
 LINKER= arch/$(ARCH)/linker.ld
-CFLAG= -I./include -std=c11 -ffreestanding -Wall -Wextra
-LDFLAG= -nostdlib -T $(LINKER) -o $(KERNEL) $(OBJS) -lgcc
+CFLAG= -std=c11 -ffreestanding -g -Wall -Wextra
+LDFLAG= -ffreestanding -nostdlib -g -T $(LINKER) $(OBJS)  -o $(KERNEL) -lgcc
