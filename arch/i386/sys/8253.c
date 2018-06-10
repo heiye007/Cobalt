@@ -133,9 +133,9 @@ uint32_t get_ticks()
 }
 
 /* Function to wait 'x' ticks */
-void timer_wait(int ticks)
+void timer_wait(uint32_t ticks)
 {
-    int eticks;
+    uint32_t eticks;
 
     eticks = timer_ticks + ticks;
     while(timer_ticks < eticks)

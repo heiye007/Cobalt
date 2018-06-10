@@ -68,3 +68,7 @@ enum {
 };
 
 uint16_t ebx, ecx, eax, edx;
+void getCPUName(void);
+void getCPUVendor(void);
+void getCPUFeatures(void);
+void getCPUArch(void);

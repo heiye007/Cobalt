@@ -1,4 +1,6 @@
 #include <i386/vga.h>
+#include <i386/cpu.h>
+#include <i386/kheap.h>
 #include <i386/gfx.h>
 #include <i386/8042.h>
 #include <multiboot.h>
@@ -6,7 +8,6 @@
 #include <stdint.h>
 
 int lastlinedetect;
-int i;
 
 uint32_t shell()
 {
@@ -88,6 +89,9 @@ uint32_t shell()
     {
       unsigned int *ptr = (unsigned int*)0xA0000000;
       unsigned int do_page_fault = *ptr;
+      *ptr = NULL;
+      do_page_fault = NULL;
+      kmalloc(*ptr + do_page_fault);
     }
     else if (!strcmp(cmd, "cpuinfo"))
     {
@@ -95,14 +99,6 @@ uint32_t shell()
       getCPUFeatures();
       getCPUArch();
       getCPUName();
-    }
-    else if (!strcmp(cmd, "kmalloc"))
-    {
-      i = kmalloc(sizeof(uint32_t));
-    }
-    else if (!strcmp(cmd, "kfree"))
-    {
-      kfree(i);
     }
     else if (!strcmp(cmd, "debug"))
     {
