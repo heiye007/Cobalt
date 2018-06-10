@@ -1,6 +1,5 @@
-Cobalt v0.1
+Cobalt
 
 # Description
 
-i386 Kernel written in C aiming POSIX compatibility.
-Re-writting the code in short time periods with my own.
+i[3-6]86 Kernel written in C aiming POSIX compatibility.
