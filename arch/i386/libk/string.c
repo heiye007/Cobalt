@@ -96,3 +96,63 @@ char *strncpy(char *dest, const char *src, size_t n)
 
    return dest;
 }
+
+void memory_zero(void *p, size_t size)
+{
+  char *p_current = (char*)p;
+  char *p_end = p_current + size;
+
+  do
+  {
+    *p_current = 0;
+  } while(++p_current != p_end);
+}
+
+int hex8(uint8_t value, char *buf)
+{
+  const char *hex = "0123456789ABCDEF";
+  
+  buf[0] = hex[(value >> 4)];
+  buf[1] = hex[value & 0xF];
+  buf[2] = '\0';
+}
+
+int hex16(uint16_t value, char *buf)
+{
+  const char *hex = "0123456789ABCDEF";
+  
+  buf[0] = hex[(value >> 12) & 0xF];
+  buf[1] = hex[(value >> 8) & 0xF];
+  buf[2] = hex[(value >> 4) & 0xF];
+  buf[3] = hex[value & 0xF];
+  buf[4] = '\0';
+}
+
+void hex_dump(void *data, size_t len)
+{
+  const int bytes_per_row = 16;
+  uint8_t *ptr = (uint8_t*)data;
+  char hex_buffer[5];
+  size_t rows = len / bytes_per_row;
+  uint16_t row = 0;
+
+  for (int i = 0; i < len; ++i)
+  {
+    if ((i % bytes_per_row) == 0)
+    {
+      if(i != 0)
+      {
+        printk("\n");
+      }
+
+      hex16(row * bytes_per_row, hex_buffer);
+      printk(hex_buffer);
+      printk(" ");
+      row++;
+    }
+    
+    hex8(ptr[i], hex_buffer);
+    printk(hex_buffer);
+    printk(" ");  
+  }
+}
