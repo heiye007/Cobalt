@@ -31,6 +31,73 @@ void identity_map(uint32_t address, uint32_t length)
     }
 }
 
+static struct page_table *clone_table(struct page_table *src, unsigned int *physAddr)
+{
+    // Make a new page table, which is page aligned.
+    struct page_table *table = (struct page_table*)kmalloc_ap(sizeof(struct page_table), 1, physAddr);
+    // Ensure that the new table is blank.
+    memset(table, 0, sizeof(struct page_directory));
+
+    // For every entry in the table...
+    int i;
+    for (i = 0; i < 1024; i++)
+    {
+        // If the source entry has a frame associated with it...
+        if (src->pages[i].frame)
+        {
+            // Get a new frame.
+            alloc_frame(&table->pages[i], 0, 0);
+            // Clone the flags from source to destination.
+            if (src->pages[i].present) table->pages[i].present = 1;
+            if (src->pages[i].rw) table->pages[i].rw = 1;
+            if (src->pages[i].user) table->pages[i].user = 1;
+            if (src->pages[i].accessed) table->pages[i].accessed = 1;
+            if (src->pages[i].dirty) table->pages[i].dirty = 1;
+            // Physically copy the data across. This function is in process.s.
+            copy_page_physical(src->pages[i].frame*0x1000, table->pages[i].frame*0x1000);
+        }
+    }
+    return table;
+}
+
+struct page_directory *clone_directory(struct page_directory *src)
+{
+    unsigned int phys;
+    // Make a new page directory and obtain its physical address.
+    struct page_directory *dir = (struct page_directory*)kmalloc_ap(sizeof(struct page_directory), 1, &phys);
+    // Ensure that it is blank.
+    memset(dir, 0, sizeof(struct page_directory));
+
+    // Get the offset of tablesPhysical from the start of the page_directory structure.
+    unsigned int offset = (unsigned int)dir->tablesPhysical - (unsigned int)dir;
+
+    // Then the physical address of dir->tablesPhysical is:
+    dir->physicalAddr = phys + offset;
+
+    // Go through each page table. If the page table is in the kernel directory, do not make a new copy.
+    int i;
+    for (i = 0; i < 1024; i++)
+    {
+        if (!src->tables[i])
+            continue;
+
+        if (kernel_directory->tables[i] == src->tables[i])
+        {
+            // It's in the kernel, so just use the same pointer.
+            dir->tables[i] = src->tables[i];
+            dir->tablesPhysical[i] = src->tablesPhysical[i];
+        }
+        else
+        {
+            // Copy the table.
+            unsigned int phys;
+            dir->tables[i] = clone_table(src->tables[i], &phys);
+            dir->tablesPhysical[i] = phys | 0x07;
+        }
+    }
+    return dir;
+}
+
 void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t ident_len)
 {
     init_frame_allocator(total_frames);
@@ -120,6 +187,8 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     printk("[PAGING] Kernel heap initialized\n");
 #endif
 
+    current_directory = clone_directory(kernel_directory);
+    switch_page_directory(current_directory);
     printkok("Initialized Paging");
 }
 
