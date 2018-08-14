@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define INITIAL_HEAP_PAGE_COUNT 4
+#define INITIAL_HEAP_PAGE_COUNT 5
 
 void initialize_kheap(uint32_t start_addr);
 void *kmalloc(uint32_t size);
