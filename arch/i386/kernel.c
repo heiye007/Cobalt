@@ -13,6 +13,8 @@
 #include <i386/panic.h>
 #include <i386/tss.h>
 #include <i386/gfx.h>
+#include <i386/fs.h>
+#include <i386/initrd.h>
 #include <multiboot.h>
 #include <stdbool.h>
 
@@ -20,10 +22,13 @@
 
 extern uint32_t x86_kernel_start, x86_kernel_end;
 uint32_t x86_ramsize, x86_initial_esp;
+bool modules_exist = false;
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
 	x86_initial_esp = initial_boot_stack;
+	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
+	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
@@ -52,6 +57,17 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	pit_init();
 	pic_init();
 	init_8042_keyboard();
+
+ 	if (mbi->mods_count > 0)
+	{
+		modules_exist = true;
+		fs_root = initialise_initrd(initrd_location);
+	}
+	else
+	{
+		printk("No Modules Found!\n");
+	}
+
 	shell();
 
 	/* XXX: Kernel can't reach this zone,
