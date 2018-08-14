@@ -20,7 +20,7 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-extern uint32_t x86_kernel_start, x86_kernel_end;
+extern uint32_t x86_kernel_start, x86_kernel_end, placement_address;
 uint32_t x86_ramsize, x86_initial_esp;
 bool modules_exist = false;
 
@@ -29,6 +29,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	x86_initial_esp = initial_boot_stack;
 	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
 	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
+	placement_address = initrd_end;
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
