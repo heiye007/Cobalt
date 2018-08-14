@@ -4,6 +4,8 @@
 #include <i386/regs.h>
 #include <stdint.h>
 
+#define PAGE_SIZE 4096
+
 // An actual page descriptor
 typedef struct
 {

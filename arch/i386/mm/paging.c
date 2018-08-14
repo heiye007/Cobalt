@@ -27,7 +27,7 @@ void identity_map(uint32_t address, uint32_t length)
         p->rw = 1;
         p->user = 0;
         p->frame = curr >> 12;
-        curr += 0x1000;
+        curr += PAGE_SIZE;
     }
 }
 
@@ -54,7 +54,7 @@ static page_table *clone_table(page_table *src, unsigned int *physAddr)
             if (src->pages[i].accessed) table->pages[i].accessed = 1;
             if (src->pages[i].dirty) table->pages[i].dirty = 1;
             // Physically copy the data across. This function is in process.s.
-            copy_page_physical(src->pages[i].frame*0x1000, table->pages[i].frame*0x1000);
+            copy_page_physical(src->pages[i].frame*PAGE_SIZE, table->pages[i].frame*PAGE_SIZE);
         }
     }
     return table;
@@ -118,7 +118,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     for(i = 0; i < 0xFFFFFFFF;)
     {
         get_page(i, 1, kernel_directory);
-        i += 0x1000 * 1024;
+        i += PAGE_SIZE * 1024;
 
         if(i == 0)
         {
@@ -147,7 +147,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     {
         // Kernel code is readable but not writeable from userspace.
         alloc_frame( get_page(i, 1, kernel_directory), 0, 0);
-        i += 0x1000;
+        i += PAGE_SIZE;
     }
 
     // Before we do anything else, disable the original kmalloc so we don't
@@ -161,7 +161,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     // bootstrap the kheap with INITIAL_HEAP_PAGE_COUNT pages.
     for(i = 0; i < INITIAL_HEAP_PAGE_COUNT; i++)
     {
-        alloc_frame(get_page(heap_start + (i * 0x1000), 1, kernel_directory), 0, 0);
+        alloc_frame(get_page(heap_start + (i * PAGE_SIZE), 1, kernel_directory), 0, 0);
     }
 
     // Before we enable paging, we must register our page fault handler.
@@ -206,7 +206,7 @@ void switch_page_directory(page_directory *dir)
 page *get_page(uint32_t address, int make, page_directory *dir)
 {
     // Turn the address into an index.
-    address /= 0x1000;
+    address /= PAGE_SIZE;
     // Find the page table containing this address.
     uint32_t table_idx = address / 1024;
 
@@ -227,7 +227,7 @@ page *get_page(uint32_t address, int make, page_directory *dir)
             dir->tables[table_idx] = (page_table *)kmalloc_ap(sizeof(page_table), 1, &tmp);
         }
 
-        memset(dir->tables[table_idx], 0, 0x1000);
+        memset(dir->tables[table_idx], 0, PAGE_SIZE);
         dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
         return &dir->tables[table_idx]->pages[address%1024];
     }
