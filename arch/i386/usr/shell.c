@@ -119,7 +119,6 @@ uint32_t shell()
       {
         printk("%d B)\nCurrent Heap Allocations: (%d)\n", x86_total_bytes, x86_byte_allocations);
       }
-
       if(x86_free_bytes / 1024 / 1024 > 0)
       {
         printk("Current Heap Free Memory: (%d MiB)\n", x86_free_bytes / 1024 / 1024);
@@ -132,13 +131,13 @@ uint32_t shell()
       {
         printk("Current Heap Free Memory: (%d B)\n", x86_free_bytes);
       }
-      printk("Total System RAM: %d MB \n",  x86_ramsize);
+        printk("Total System RAM: %d MB \n",  x86_ramsize);
+      }
+      else
+      {
+        printk("Unknown command: %s\n", cmd);
+      }
     }
-    else
-    {
-      printk("Unknown command: %s\n", cmd);
-    }
-  }
 
   return 0;
 }
