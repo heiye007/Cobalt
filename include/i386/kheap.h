@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// TODO: Grow Heap Page count as per need!
 #define INITIAL_HEAP_PAGE_COUNT 5
 
 void initialize_kheap(uint32_t start_addr);
