@@ -8,8 +8,8 @@
 #include <stdint.h>
 #include <types.h>
 
-struct page_directory *kernel_directory;
-struct page_directory *current_directory;
+page_directory *kernel_directory;
+page_directory *current_directory;
 extern uint32_t placement_address;
 
 uint8_t initialized = 0;
@@ -22,7 +22,7 @@ void identity_map(uint32_t address, uint32_t length)
 
     while(curr < address + length)
     {
-        struct page *p = get_page(curr, 1, kernel_directory);
+        page *p = get_page(curr, 1, kernel_directory);
         p->present = 1;
         p->rw = 1;
         p->user = 0;
@@ -31,12 +31,12 @@ void identity_map(uint32_t address, uint32_t length)
     }
 }
 
-static struct page_table *clone_table(struct page_table *src, unsigned int *physAddr)
+static page_table *clone_table(page_table *src, unsigned int *physAddr)
 {
     // Make a new page table, which is page aligned.
-    struct page_table *table = (struct page_table*)kmalloc_ap(sizeof(struct page_table), 1, physAddr);
+    page_table *table = (page_table*)kmalloc_ap(sizeof(page_table), 1, physAddr);
     // Ensure that the new table is blank.
-    memset(table, 0, sizeof(struct page_directory));
+    memset(table, 0, sizeof(page_directory));
 
     // For every entry in the table...
     int i;
@@ -60,13 +60,13 @@ static struct page_table *clone_table(struct page_table *src, unsigned int *phys
     return table;
 }
 
-struct page_directory *clone_directory(struct page_directory *src)
+page_directory *clone_directory(page_directory *src)
 {
     unsigned int phys;
     // Make a new page directory and obtain its physical address.
-    struct page_directory *dir = (struct page_directory*)kmalloc_ap(sizeof(struct page_directory), 1, &phys);
+    page_directory *dir = (page_directory*)kmalloc_ap(sizeof(page_directory), 1, &phys);
     // Ensure that it is blank.
-    memset(dir, 0, sizeof(struct page_directory));
+    memset(dir, 0, sizeof(page_directory));
 
     // Get the offset of tablesPhysical from the start of the page_directory structure.
     unsigned int offset = (unsigned int)dir->tablesPhysical - (unsigned int)dir;
@@ -103,8 +103,8 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     init_frame_allocator(total_frames);
 
     // Make a page directory for the kernel.
-    kernel_directory = (struct page_directory *)e_kmalloc_a(sizeof (struct page_directory));
-    memset(kernel_directory, 0, sizeof (struct page_directory));
+    kernel_directory = (page_directory *)e_kmalloc_a(sizeof (page_directory));
+    memset(kernel_directory, 0, sizeof (page_directory));
     current_directory = kernel_directory;
 
     // Go ahead and allocate all the page tables for the kernel.
@@ -192,7 +192,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     printkok("Initialized Paging");
 }
 
-void switch_page_directory(struct page_directory *dir)
+void switch_page_directory(page_directory *dir)
 {
     current_directory = dir;
     __asm__ __volatile__("mov %0, %%cr3":: "r"(&dir->tablesPhysical));
@@ -203,7 +203,7 @@ void switch_page_directory(struct page_directory *dir)
 }
 
 
-struct page *get_page(uint32_t address, int make, struct page_directory *dir)
+page *get_page(uint32_t address, int make, page_directory *dir)
 {
     // Turn the address into an index.
     address /= 0x1000;
@@ -220,11 +220,11 @@ struct page *get_page(uint32_t address, int make, struct page_directory *dir)
 
         if(!initialized)
         {
-            dir->tables[table_idx] = (struct page_table *)e_kmalloc_ap(sizeof(struct page_table), &tmp);
+            dir->tables[table_idx] = (page_table *)e_kmalloc_ap(sizeof(page_table), &tmp);
         }
         else
         {
-            dir->tables[table_idx] = (struct page_table *)kmalloc_ap(sizeof(struct page_table), 1, &tmp);
+            dir->tables[table_idx] = (page_table *)kmalloc_ap(sizeof(page_table), 1, &tmp);
         }
 
         memset(dir->tables[table_idx], 0, 0x1000);
@@ -237,14 +237,14 @@ struct page *get_page(uint32_t address, int make, struct page_directory *dir)
     }
 }
 
-struct page *get_kernel_page(uint32_t address, int make)
+page *get_kernel_page(uint32_t address, int make)
 {
     return get_page(address, make, kernel_directory);
 }
 
-struct page *map_kernel_page(uint32_t address, int make)
+page *map_kernel_page(uint32_t address, int make)
 {
-    struct page *p = get_page(address, make, kernel_directory);
+    page *p = get_page(address, make, kernel_directory);
 
     if(!p) return NULL;
 
@@ -254,7 +254,7 @@ struct page *map_kernel_page(uint32_t address, int make)
 
 void unmap_kernel_page(uint32_t address)
 {
-    struct page *p = get_page(address, 0, kernel_directory);
+    page *p = get_page(address, 0, kernel_directory);
 
     if(p)
     {

@@ -345,7 +345,7 @@ void *kmalloc_ap(uint32_t size, uint8_t align, uint32_t *phys)
 	
 	if(phys)
 	{
-		struct page *p = get_kernel_page((uint32_t)return_addr, 0);
+		page *p = get_kernel_page((uint32_t)return_addr, 0);
 		*phys = (p->frame << 12) | (((uint32_t)return_addr) & 0xFFF);
 	}
 

@@ -31,7 +31,7 @@ void init_frame_allocator(uint32_t system_frames)
     stack_count = system_frames;
 }
 
-void alloc_frame(struct page *page, int is_kernel, int is_writeable)
+void alloc_frame(page *page, int is_kernel, int is_writeable)
 {
     if (page->frame != 0)
     {
@@ -68,7 +68,7 @@ void alloc_frame(struct page *page, int is_kernel, int is_writeable)
     page->frame   = idx;
 }
 
-void free_frame(struct page *page)
+void free_frame(page *page)
 {
 	// Put the freed frame into the stack.
     top_of_stack++; // push [esp].
