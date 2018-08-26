@@ -3,25 +3,18 @@
 #include <i386/system.h>
 #include <stdint.h>
 
-void pic_init(void)
+void pic_remap(void)
 {
-#ifdef DBG_PIT
-    printk("Starting PIT initialization...\n");
-#endif
-    outb(PIC_MASTER_CMD, 0x10 + 0x01);
-    outb(PIC_SLAVE_CMD,  0x10 + 0x01);
+    outb(PIC_MASTER_CMD, 0x11);
+    outb(PIC_SLAVE_CMD, 0x11);
     outb(PIC_MASTER_DATA, 0x20);
     outb(PIC_SLAVE_DATA, 0x28);
-    outb(PIC_MASTER_DATA, 4);
-    outb(PIC_SLAVE_DATA, 2);
+    outb(PIC_MASTER_DATA, 0x04);
+    outb(PIC_SLAVE_DATA, 0x02);
     outb(PIC_MASTER_DATA, 0x01);
     outb(PIC_SLAVE_DATA, 0x01);
-    outb(PIC_MASTER_DATA, 0);
-    outb(PIC_SLAVE_DATA, 0);
-#ifdef DBG_PIT
-    printk("Started PIT successfully...\n");
-#endif
-    printkok("Initialized PIC (8259)");
+    outb(PIC_MASTER_DATA, 0x0);
+    outb(PIC_SLAVE_DATA, 0x0);
 }
 
 void pic_send_eoi(uint8_t irq)

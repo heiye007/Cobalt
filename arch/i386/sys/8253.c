@@ -147,7 +147,7 @@ void timer_wait(uint32_t ticks)
 
 void pit_init(void)
 {
-    irq_install_handler(0, timer_handler);
+    irq_install_handler(0, timer_handler); /* IRQ0: 8253 PIT */
     timer_phase(100); // Set to 100Hz
     printkok("Initialized PIT (8253)");
 }

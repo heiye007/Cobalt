@@ -16,4 +16,3 @@ extern void irq14();
 extern void irq15();
 
 void init_irq(void);
-void irq_remap(void);

@@ -34,13 +34,13 @@ void init_idt(void)
     /* Clear the IDT by zeroing out it */
     memset(&idt, 0, sizeof(struct idt_entry) * 256);
 
-    /* Remap IRQ table */
-    irq_remap();
-    printkok("Remapped IRQs");
-
     /* Init ISR's */
     init_isr();
     printkok("Initialized ISRs");
+
+    /* Remap the PIC */
+    pic_remap();
+    printkok("Remapped the PIC");
 
     /* Init IRQ's */
     init_irq();
