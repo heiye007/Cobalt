@@ -103,10 +103,10 @@ uint32_t shell()
     else if (!strcmp(cmd, "debug"))
     {
       extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_ramsize, x86_kernel_size;
+      printk("Current Framebuffer: 0x%x\n", get_screen_fb());
       printk("Initial Stack Pointer: 0x%x\n", x86_initial_esp);
       printk("Kernel Base: 0x%x , Kernel End: 0x%x , Kernel Size: (%dKiB)\n", &x86_kernel_start, &x86_kernel_end, ((uint32_t) &x86_kernel_size) >> 10);
       printk("Heap Base: 0x%x , Heap End: 0x%x , Heap Size: (", x86_memoryhead, x86_memoryend);
-
       if(x86_total_bytes / 1024 / 1024 > 0)
       {
         printk("%d MiB)\nCurrent Heap Allocations: (%d)\n", x86_total_bytes / 1024 / 1024, x86_byte_allocations);
