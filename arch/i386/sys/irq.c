@@ -57,7 +57,7 @@ void init_irq(void)
     idt_set_gate(47, (unsigned)irq15, 0x08, 0x8E);
 }
 
-void irq_handler(struct regs *r)
+void x86_irq_handler(struct regs *r)
 {
     void (*handler)(struct regs *r);
 

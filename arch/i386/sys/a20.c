@@ -56,6 +56,7 @@ void init_a20()
             a20_enable_ps2();
             if (check_a20())
             {
+                printkok("Initialized A20 Line using PS2 Controller");
                 return;
             }
             else
@@ -63,6 +64,7 @@ void init_a20()
                 a20_enable_fast();
                 if (check_a20())
                 {
+                    printkok("Initialized A20 Line using Fast Gate");
                     return;
                 }
                 else
