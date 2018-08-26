@@ -102,6 +102,6 @@ char getch(void)
 
 void init_8042_keyboard(void)
 {
-    irq_install_handler(1, keyboard_handler);
+    irq_install_handler(1, keyboard_handler); /* IRQ1: Keyboard */
     printkok("Initialized PS2 (8042) Keyboard");
 }
