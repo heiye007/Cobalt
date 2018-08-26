@@ -1,6 +1,7 @@
 #include <i386/8042.h>
 #include <i386/vga.h>
 #include <i386/system.h>
+#include <i386/regs.h>
 #include <stdint.h>
 #include <types.h>
 
@@ -54,7 +55,7 @@ struct SKeys
 int kbd_state = 0;
 char curr_char = NULL;
 
-void keyboard_handler()
+static void keyboard_handler(struct regs* r)
 {
     uint16_t scancodebuf[5];
     uint16_t *sc = scancodebuf;
