@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <types.h>
 
-extern void irq_install_handler(int irq, void (*handler));
+extern void x86_register_interrupt_handler(int irq, void (*handler));
 
 uint8_t keycode[128] =
 {
@@ -102,6 +102,6 @@ char getch(void)
 
 void init_8042_keyboard(void)
 {
-    irq_install_handler(1, keyboard_handler); /* IRQ1: Keyboard */
+    x86_register_interrupt_handler(1, keyboard_handler); /* IRQ1: Keyboard */
     printkok("Initialized PS2 (8042) Keyboard");
 }
