@@ -21,7 +21,8 @@
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address, x86_kernel_code;
-uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end, x86_memory_location, x86_ramstart, x86_memory_end_location;
+uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end;
+uint32_t x86_memory_location, x86_ramstart, x86_memory_end_location, x86_total_frames;
 bool modules_exist = false;
 const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
 int x86_memory_amount, x86_usable_mem;
@@ -75,7 +76,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
     // We add up 2 MiB to round up the memory calculation
     x86_ramsize = (x86_usable_mem / 1024 / 1024) + 2;
     
-    uint32_t x86_total_frames = x86_usable_mem / 0x1000;
+    x86_total_frames = x86_usable_mem / 0x1000;
 
 	init_a20();
 	init_gdt();
