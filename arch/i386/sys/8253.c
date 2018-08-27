@@ -3,7 +3,7 @@
 #include <i386/vga.h>
 #include <i386/regs.h>
 
-extern void irq_install_handler(int irq, void (*handler));
+extern void x86_register_interrupt_handler(int irq, void (*handler));
 
 /* timer_ticks keeps track of all the ticks that
    will happen since PIT initialization */
@@ -147,7 +147,7 @@ void timer_wait(uint32_t ticks)
 
 void pit_init(void)
 {
-    irq_install_handler(0, timer_handler); /* IRQ0: 8253 PIT */
+    x86_register_interrupt_handler(0, timer_handler); /* IRQ0: 8253 PIT */
     timer_phase(100); // Set to 100Hz
     printkok("Initialized PIT (8253)");
 }
