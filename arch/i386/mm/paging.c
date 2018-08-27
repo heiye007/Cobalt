@@ -14,7 +14,7 @@ extern uint32_t placement_address;
 
 uint8_t initialized = 0;
 
-extern void irq_install_handler(int irq, void (*handler));
+extern void x86_register_interrupt_handler(int irq, void (*handler));
 
 void identity_map(uint32_t address, uint32_t length)
 {
@@ -165,7 +165,7 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     }
 
     // Before we enable paging, we must register our page fault handler.
-    irq_install_handler(14, x86_pagefault_handler);
+    x86_register_interrupt_handler(14, x86_pagefault_handler);
 
     if(ident_addr)
     {
