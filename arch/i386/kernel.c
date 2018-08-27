@@ -20,8 +20,8 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-extern uint32_t x86_kernel_start, x86_kernel_end, placement_address;
-uint32_t x86_ramsize, x86_initial_esp;
+extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address;
+uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end;
 bool modules_exist = false;
 const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
 
@@ -36,16 +36,17 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 		return;
 	}
 	
-	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
-	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
-	placement_address = initrd_end;
+	x86_initrd_start = *(uint32_t*)(mbi->mods_addr);
+	x86_initrd_end = *(uint32_t*)(mbi->mods_addr+4);
+	x86_initrd_size = x86_initrd_end - x86_initrd_start;
+	x86_placement_address = x86_initrd_end;
 
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
     uint32_t total_frames = high_pages + low_pages;
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
     x86_ramsize = mbi->mem_upper / 1024 + 2;
-    
+
     init_text_mode();
 
     while(mmap < mbi->mmap_addr + mbi->mmap_length)
@@ -68,7 +69,8 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
  	if (mbi->mods_count > 0)
 	{
 		modules_exist = true;
-		fs_root = initialise_initrd(initrd_location);
+		uint32_t x86_initrd_location = x86_initrd_start;
+		fs_root = initialise_initrd(x86_initrd_location);
 	}
 	else
 	{

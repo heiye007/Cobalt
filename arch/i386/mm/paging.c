@@ -10,7 +10,7 @@
 
 page_directory *kernel_directory;
 page_directory *current_directory;
-extern uint32_t placement_address;
+extern uint32_t x86_placement_address;
 
 uint8_t initialized = 0;
 
@@ -134,16 +134,16 @@ void initialize_paging(uint32_t total_frames, uint32_t ident_addr, uint32_t iden
     // 0x0 to the end of used memory, so we can access this
     // transparently, as if paging wasn't enabled.
     // NOTE that we use a while loop here deliberately.
-    // inside the loop body we actually change placement_address
+    // inside the loop body we actually change x86_placement_address
     // by calling kmalloc(). A while loop causes this to be
     // computed on-the-fly rather than once at the start.
 
     // This is hacky. Probably want to do this some other way.
-    // Reaching into kmalloc_early and grabbing placement_address
+    // Reaching into kmalloc_early and grabbing x86_placement_address
     // is not ideal.
     i = 0;
 
-    while(i < placement_address)
+    while(i < x86_placement_address)
     {
         // Kernel code is readable but not writeable from userspace.
         alloc_frame( get_page(i, 1, kernel_directory), 0, 0);

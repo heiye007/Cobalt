@@ -102,11 +102,26 @@ uint32_t shell()
     }
     else if (!strcmp(cmd, "debug"))
     {
-      extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_ramsize, x86_kernel_size;
+      extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_initrd_size, x86_initrd_start, x86_initrd_end, x86_ramsize, x86_kernel_size, x86_kernel_iss, x86_kernel_ise, x86_kernel_isi;
       printk("Current Framebuffer: 0x%x\n", get_screen_fb());
       printk("Initial Stack Pointer: 0x%x\n", x86_initial_esp);
       printk("Kernel Base: 0x%x , Kernel End: 0x%x , Kernel Size: (%dKiB)\n", &x86_kernel_start, &x86_kernel_end, ((uint32_t) &x86_kernel_size) >> 10);
+      printk("Boot Stack Base: 0x%x , Boot Stack End: 0x%x , Boot Stack Size: (%dKiB)\n", &x86_kernel_isi, &x86_kernel_ise, ((uint32_t) &x86_kernel_iss) >> 10);
+      printk("Initrd start: 0x%x , Initrd end: 0x%x , Initrd Size: (", x86_initrd_start, x86_initrd_end);
+
+      if(x86_initrd_size / 1024 / 1024 > 0)
+      {
+        printk("%d MiB)\n", x86_initrd_size / 1024 / 1024);
+      }
+      else if(x86_initrd_size / 1024 > 0)
+      {
+        printk("%d KiB)\n", x86_initrd_size / 1024);
+      } else {
+        printk("%d B)\n", x86_initrd_size);
+      }
+
       printk("Heap Base: 0x%x , Heap End: 0x%x , Heap Size: (", x86_memoryhead, x86_memoryend);
+      
       if(x86_total_bytes / 1024 / 1024 > 0)
       {
         printk("%d MiB)\nCurrent Heap Allocations: (%d)\n", x86_total_bytes / 1024 / 1024, x86_byte_allocations);
@@ -114,11 +129,10 @@ uint32_t shell()
       else if(x86_total_bytes / 1024 > 0)
       {
         printk("%d KiB)\nCurrent Heap Allocations: (%d)\n", x86_total_bytes / 1024, x86_byte_allocations);
-      }
-      else
-      {
+      } else {
         printk("%d B)\nCurrent Heap Allocations: (%d)\n", x86_total_bytes, x86_byte_allocations);
       }
+
       if(x86_free_bytes / 1024 / 1024 > 0)
       {
         printk("Current Heap Free Memory: (%d MiB)\n", x86_free_bytes / 1024 / 1024);
@@ -126,12 +140,12 @@ uint32_t shell()
       else if(x86_free_bytes / 1024 > 0)
       {
         printk("Current Heap Free Memory: (%d KiB)\n", x86_free_bytes / 1024);
-      }
-      else
-      {
+      } else {
         printk("Current Heap Free Memory: (%d B)\n", x86_free_bytes);
       }
+
         printk("Total System RAM: %d MB \n",  x86_ramsize);
+      
       }
       else
       {
