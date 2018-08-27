@@ -94,4 +94,7 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+typedef void (*isr_t)(registers_t);
+isr_t x86_interrupt_handlers[256];
+
 void init_isr(void);
