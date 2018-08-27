@@ -21,9 +21,10 @@
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address;
-uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end;
+uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end, x86_memory_location, x86_ramstart, x86_memory_end_location;
 bool modules_exist = false;
 const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
+int x86_memory_amount, x86_usable_mem;
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
@@ -55,9 +56,24 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 		uint32_t len = (uint32_t)mmap->len;
 
 		printk("0x%x - 0x%x | %s\n", addr, addr + len, mem_type_names[mmap->type]);
+		
+		if(mmap->type == 1 && mmap->len > 0x100000)
+		{
+			x86_memory_location = mmap->addr;
+			x86_memory_amount = mmap->len;
+		}
+
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
+    x86_ramstart = x86_memory_location;
+    x86_memory_end_location = x86_memory_location + x86_memory_amount;
+    x86_usable_mem = x86_memory_end_location - x86_memory_location;
+    // Second method for getting total usable memory
+    //			  Bytes            KiB    MiB
+    // We add up 2 MiB to round up the  memory calculation
+    x86_ramsize = (x86_usable_mem / 1024 / 1024) + 2;
+	
 	init_a20();
 	init_gdt();
 	init_idt();
