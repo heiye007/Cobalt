@@ -3,8 +3,6 @@
 #include <i386/vga.h>
 #include <i386/regs.h>
 
-extern void x86_register_interrupt_handler(int irq, void (*handler));
-
 /* timer_ticks keeps track of all the ticks that
    will happen since PIT initialization */
 uint32_t timer_ticks = 0;

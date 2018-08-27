@@ -61,17 +61,3 @@ void x86_exception_handler(struct regs *r)
             break;
     }
 }
-
-void x86_register_interrupt_handler(int n, isr_t handler)
-{
-    __asm__ __volatile__ ("cli");
-    x86_interrupt_handlers[n] = handler;
-    __asm__ __volatile__ ("sti");
-}
-
-void x86_unregister_interrupt_handler(int n)
-{
-    __asm__ __volatile__ ("cli");
-    x86_interrupt_handlers[n] = 0;
-    __asm__ __volatile__ ("sti");
-}

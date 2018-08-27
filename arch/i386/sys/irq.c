@@ -1,9 +1,27 @@
 #include <i386/irq.h>
-#include <i386/isr.h>
-#include <i386/8259.h>
 #include <i386/system.h>
 #include <i386/idt.h>
 #include <i386/regs.h>
+
+void *irq_routines[16] =
+{
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
+void x86_register_interrupt_handler(int n, void (*handler))
+{
+	__asm__ __volatile__ ("cli");
+    irq_routines[n] = handler;
+	__asm__ __volatile__ ("sti");
+}
+
+void x86_unregister_interrupt_handler(int n)
+{
+	__asm__ __volatile__ ("cli");
+    irq_routines[n] = 0;
+    __asm__ __volatile__ ("sti");
+}
 
 void init_irq(void)
 {
@@ -27,14 +45,19 @@ void init_irq(void)
 
 void x86_irq_handler(struct regs *r)
 {
-    /* After every interrupt we need to send an EOI to the PICs
-     * or they will not send another interrupt again */
-    if (r->int_no >= 40) outb(PIC_SLAVE_CMD, 0x20); /* Slave CMD */
-    outb(PIC_MASTER_CMD , 0x20); /* Master CMD */
+    void (*handler)(struct regs *r);
 
-    if (x86_interrupt_handlers[r->int_no] != 0)
+    handler = irq_routines[r->int_no - 32];
+
+    if (handler)
     {
-        isr_t handler = x86_interrupt_handlers[r->int_no];
         handler(r);
     }
+
+    if (r->int_no >= 40)
+    {
+        outb(0xA0, 0x20);
+    }
+
+    outb(0x20, 0x20);
 }
