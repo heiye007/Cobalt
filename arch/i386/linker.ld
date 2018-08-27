@@ -6,8 +6,8 @@ SECTIONS
 
     .text BLOCK(4K) : ALIGN(4K)
     {
-        *(.multiboot)
         x86_kernel_code = .;
+        *(.multiboot)
         *(.text)
     }
 

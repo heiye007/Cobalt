@@ -103,7 +103,8 @@ uint32_t shell()
     else if (!strcmp(cmd, "debug"))
     {
       extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_initrd_size, x86_initrd_start, x86_initrd_end;
-      extern uint32_t x86_ramsize, x86_kernel_size, x86_kernel_iss, x86_kernel_ise, x86_kernel_isi, x86_ramstart, x86_memory_end_location, x86_memory_amount, x86_memory_location, x86_usable_mem;
+      extern uint32_t x86_ramsize, x86_kernel_size, x86_kernel_iss, x86_kernel_ise, x86_kernel_isi, x86_ramstart, x86_memory_end_location, x86_memory_amount, x86_memory_location, x86_usable_mem, x86_total_frames;
+      printk("Total frames: %d\n", x86_total_frames);
       printk("Current Framebuffer: 0x%x\n", get_screen_fb());
       printk("Initial Stack Pointer: 0x%x\n", x86_initial_esp);
       printk("Kernel Base: 0x%x , Kernel End: 0x%x , Kernel Size: (%dKiB)\n", &x86_kernel_start, &x86_kernel_end, ((uint32_t) &x86_kernel_size) >> 10);

@@ -20,11 +20,13 @@
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
-extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address;
+extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address, x86_kernel_code;
 uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end, x86_memory_location, x86_ramstart, x86_memory_end_location;
 bool modules_exist = false;
 const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
 int x86_memory_amount, x86_usable_mem;
+
+#define ROUNDUP(x, y) (x % y ? x + (y - (x % y)) : x)
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
@@ -40,11 +42,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	x86_initrd_start = *(uint32_t*)(mbi->mods_addr);
 	x86_initrd_end = *(uint32_t*)(mbi->mods_addr+4);
 	x86_initrd_size = x86_initrd_end - x86_initrd_start;
-	x86_placement_address = x86_initrd_end;
 
-	uint32_t low_pages = 256;
-    uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
-    uint32_t total_frames = high_pages + low_pages;
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
     x86_ramsize = mbi->mem_upper / 1024 + 2;
 
@@ -66,18 +64,23 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
+    x86_placement_address = x86_initrd_end;
+
     x86_ramstart = x86_memory_location;
     x86_memory_end_location = x86_memory_location + x86_memory_amount;
     x86_usable_mem = x86_memory_end_location - x86_memory_location;
+    
     // Second method for getting total usable memory
     //			  Bytes            KiB    MiB
-    // We add up 2 MiB to round up the  memory calculation
+    // We add up 2 MiB to round up the memory calculation
     x86_ramsize = (x86_usable_mem / 1024 / 1024) + 2;
-	
+    
+    uint32_t x86_total_frames = x86_usable_mem / 0x1000;
+
 	init_a20();
 	init_gdt();
 	init_idt();
-	initialize_paging(total_frames, 0, 0);
+	initialize_paging(x86_total_frames, 0, 0);
 	malloc_stats();
 	pit_init();
 	init_8042_keyboard();
