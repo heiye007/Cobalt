@@ -23,6 +23,7 @@
 extern uint32_t x86_kernel_start, x86_kernel_end, placement_address;
 uint32_t x86_ramsize, x86_initial_esp;
 bool modules_exist = false;
+const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
@@ -44,13 +45,18 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
     uint32_t total_frames = high_pages + low_pages;
     multiboot_memory_map_t* mmap = mbi->mmap_addr;
     x86_ramsize = mbi->mem_upper / 1024 + 2;
+    
+    init_text_mode();
 
     while(mmap < mbi->mmap_addr + mbi->mmap_length)
     {
+       	uint32_t addr = (uint32_t)mmap->addr;
+		uint32_t len = (uint32_t)mmap->len;
+
+		printk("0x%x - 0x%x | %s\n", addr, addr + len, mem_type_names[mmap->type]);
         mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     }
 
-	init_text_mode();
 	init_a20();
 	init_gdt();
 	init_idt();
