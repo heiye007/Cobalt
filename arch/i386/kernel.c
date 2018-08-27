@@ -27,9 +27,6 @@ bool modules_exist = false;
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
 	x86_initial_esp = initial_boot_stack;
-	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
-	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
-	placement_address = initrd_end;
 
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
@@ -37,6 +34,10 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 		__asm__ __volatile__ ("hlt");
 		return;
 	}
+	
+	uint32_t initrd_location = *((uint32_t*)mbi->mods_addr);
+	uint32_t initrd_end = *(uint32_t*)(mbi->mods_addr+4);
+	placement_address = initrd_end;
 
 	uint32_t low_pages = 256;
     uint32_t high_pages = (mbi->mem_upper * 1024) / 4096 + 30000;
