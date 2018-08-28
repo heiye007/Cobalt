@@ -2,9 +2,11 @@
 #include <i386/font.h>
 #include <stdint.h>
 
+#define TEXT_80x25 1
+
 // gfx.c
 void init_text_mode();
-void init_vbe(uint8_t* regs);
+void init_vbe(char *regs);
 
 // vbe.c
 void vbe_write_regs(uint8_t* regs);

@@ -1,6 +1,7 @@
 #include <i386/vga.h>
 #include <i386/system.h>
 #include <i386/panic.h>
+#include <i386/gfx.h>
 #include <string.h>
 
 #define WIDTH 80
@@ -215,6 +216,7 @@ void setup_text_mode(void)
     cls();
     update_cursor(0, 0);
     enable_cursor(14, 15);
+    update_mode_info(TEXT_80x25);
 }
 
 void printkint(const int number)

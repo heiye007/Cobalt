@@ -42,6 +42,20 @@ unsigned char g_320x200x256[] =
     0x41, 0x00, 0x0F, 0x00, 0x00
 };
 
+int currmode = 0;
+
+void update_mode_info(int mode)
+{
+    switch(mode)
+    {
+        case(TEXT_80x25):
+            currmode = TEXT_80x25; // 80x25 Text Mode
+            break;
+        default:
+        break;
+    }
+}
+
 void init_text_mode()
 {
     vbe_write_regs(g_80x25_text);
@@ -62,7 +76,36 @@ void init_text_mode()
     setup_text_mode();
 }
 
-void init_vbe(uint8_t* regs)
+void init_vbe(char *regs)
 {
-    vbe_write_regs(regs);
+    if (!strcmp(regs, "modes")) {
+        /* Make mode gathering automatic
+           either by using multiboot header
+           or using GPU and Monitor values
+           or maybe EDID? */
+        printk("Available VESA modes:\n");
+        printk("Height     Width     BPP\n");
+        printk("320     x  200    x  256\n");
+        printk("80      x  25\n");
+    } else if (!strcmp(regs, "320x200x256")) {
+        vbe_write_regs(g_320x200x256);
+        vbe_clear_screen(9);
+        vbe_draw_rectangle(0,0,320,10,8); // Title Bar
+        vbe_printk("cobalt vbe test");
+    } else if (!strcmp(regs, "80x25")) {
+        if (currmode == TEXT_80x25) {
+            printk("You can't set a mode you're already using!\n");
+        } else {
+            vbe_write_regs(g_80x25_text);
+        }
+    } else if (!strcmp(regs, "") || !strcmp(regs, "help")) {
+        printk("Usage:\n");
+        printk("vbe MODE\n");
+        printk("For available modes, use:\n");
+        printk("vbe modes\n");
+        printk("Example:\n");
+        printk("vbe 320x200x256\n");
+    } else {
+        printk("VESA mode not found!\n");
+    }
 }

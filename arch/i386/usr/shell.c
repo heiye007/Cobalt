@@ -171,11 +171,7 @@ void makepanic(char *args)
 
 void vbe(char *args)
 {
-  extern unsigned char g_320x200x256[];
-  init_vbe(g_320x200x256);
-  vbe_clear_screen(9);
-  vbe_draw_rectangle(0,0,320,10,8); // Title Bar
-  vbe_printk("cobalt vbe test");
+  init_vbe(args);
 }
 
 void pgf(char *args)
