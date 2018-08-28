@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #define TEXT_80x25 1
+#define SD_320x200x256 2
 
 // gfx.c
 void init_text_mode();

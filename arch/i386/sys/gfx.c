@@ -51,8 +51,10 @@ void update_mode_info(int mode)
         case(TEXT_80x25):
             currmode = TEXT_80x25; // 80x25 Text Mode
             break;
+        case(SD_320x200x256):
+            currmode = SD_320x200x256; // 320x200x256 SD Mode
         default:
-        break;
+            break;
     }
 }
 
@@ -88,13 +90,18 @@ void init_vbe(char *regs)
         printk("320     x  200    x  256\n");
         printk("80      x  25\n");
     } else if (!strcmp(regs, "320x200x256")) {
-        vbe_write_regs(g_320x200x256);
-        vbe_clear_screen(9);
-        vbe_draw_rectangle(0,0,320,10,8); // Title Bar
-        vbe_printk("cobalt vbe test");
+        if (currmode == SD_320x200x256) {
+            printkc("You can't set a mode you're already using!\n", RED);
+        } else {
+            vbe_write_regs(g_320x200x256);
+            vbe_clear_screen(9);
+            vbe_draw_rectangle(0,0,320,10,8); // Title Bar
+            vbe_printk("cobalt vbe test");
+            update_mode_info(SD_320x200x256);
+        }
     } else if (!strcmp(regs, "80x25")) {
         if (currmode == TEXT_80x25) {
-            printk("You can't set a mode you're already using!\n");
+            printkc("You can't set a mode you're already using!\n", RED);
         } else {
             vbe_write_regs(g_80x25_text);
         }
