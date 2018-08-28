@@ -156,3 +156,60 @@ void hex_dump(void *data, size_t len)
     printk(" ");  
   }
 }
+
+void tolowercase(char *in) {
+  for(int i = 0; i < strlen(in); i++) {
+    if(in[i] >= 65 && in[i] <= 90) {
+      in[i] += 32;
+    }
+  }
+}
+
+void reverse(char s[]) {
+  int c, i, j;
+  for (i = 0, j = strlen(s)-1; i < j; i++, j--) {
+    c = s[i];
+    s[i] = s[j];
+    s[j] = c;
+  }
+}
+
+void int_to_ascii(int n, char str[]) {
+  int i, sign;
+  if ((sign = n) < 0) n = -n;
+  i = 0;
+  do {
+    str[i++] = n % 10 + '0';
+  } while ((n /= 10) > 0);
+  if (sign < 0) str[i++] = '-';
+  str[i] = '\0';
+  reverse(str);
+}
+
+void append(char s[], char n) {
+  int len = strlen(s);
+  s[len] = n;
+  s[len+1] = '\0';
+}
+void strappend(char *dest, const char *n)
+{
+  int len = strlen(n);
+  int dlen = strlen(dest);
+  for(int i = 0; i < len; i++)
+  {
+    dest[dlen + i] = n[i];
+  }
+  dest[dlen + len + 1] = '\0';
+}
+
+void strsplit(char *orig, char separator, char *a, char *b) {
+  int found = 0;
+  for(int i = 0; i < strlen(orig); i++) {
+    if (orig[i] == separator && found == 0) found = i + 1; //+1 for the seperator char
+    if (found > 0) {
+      b[i - found] = orig[i];
+    } else {
+      a[i] = orig[i];
+    }
+  }
+}

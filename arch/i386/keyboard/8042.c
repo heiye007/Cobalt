@@ -7,101 +7,104 @@
 
 extern void x86_register_interrupt_handler(int irq, void (*handler));
 
-uint8_t keycode[128] =
-{
-    0, 27, '1', '2', '3', '4', '5', '6', '7', '8',
-    '9', '0', '-', '=', '\b',
-    '\t',
-    'q', 'w', 'e', 'r',
-    't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
-    0,
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
-    '\'', '`', 0,
-    '\\', 'z', 'x', 'c', 'v', 'b', 'n',
-    'm', ',', '.', '/', 0,
-    '*',
-    0,
-    ' ',
-    0,
-    0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    '-',
-    0,
-    0,
-    0,
-    '+',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0, 0, 0,
-    0,
-    0,
-    0,
-};
+static uint8_t uppercase = 0;
+static uint8_t lastwasmagic = 0;
 
-struct SKeys
-{
-  uint16_t shift : 1;
-} keys;
+#define SC_MAX 57
 
-int kbd_state = 0;
-char curr_char = NULL;
+const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
+  "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E",
+    "R", "T", "Y", "U", "I", "O", "P", "[", "]", "Enter", "Lctrl",
+    "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "`",
+    "LShift", "\\", "Z", "X", "C", "V", "B", "N", "M", ",", ".",
+    "/", "RShift", "Keypad *", "LAlt", "Spacebar"};
 
-static void keyboard_handler(struct regs* r)
-{
-    uint16_t scancodebuf[5];
-    uint16_t *sc = scancodebuf;
+const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
+  '7', '8', '9', '0', '-', '=', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y',
+    'U', 'I', 'O', 'P', '[', ']', '?', '?', 'A', 'S', 'D', 'F', 'G',
+    'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
+    'B', 'N', 'M', ',', '.', '/', '?', '*', '?', ' '};
 
-    *sc = inb(0x60);
+const char sc_shift_below[] = { '?', '?', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '?', '?'};
 
-    if (*sc & 0x80)
-    {
-      switch(*sc)
+const char sc_shift_middle[] = { ':', '"', '~', '?', '|'}; //0x27 to 0x2B
+
+const char sc_shift_above[] = { '<', '>', '?', '?', '*', '?', ' '}; //0x33 to 0x39
+
+static void keyboard_callback(registers_t regs) {
+  /* The PIC leaves us the scancode in port 0x60 */
+  uint8_t scancode = inb(0x60);
+  uint8_t special = 1;
+  if (scancode == 0xe0)
+  {
+    lastwasmagic = 1;
+  }
+  else if (lastwasmagic)
+  {
+    keyboard_handler_special(scancode);
+    lastwasmagic = 0;
+  }
+  else
+  {
+    if (scancode > SC_MAX)
+    { //Key being released
+      //0x80 = difference between release code and press code
+      if (scancode - 0x80 == LSHIFT || scancode - 0x80  == RSHIFT)
       {
-        case 0xaa:
-          keys.shift = 0;
-          break;
-        case 0xb6:
-          keys.shift = 0;
-          break;
-        default:
-          break;
+        uppercase = 0;
+      }
+    }
+    else {
+      if (scancode == LSHIFT || scancode == RSHIFT)
+      {
+        uppercase = 1;
+      }
+      else
+      {
+        char letter = sc_ascii[(int)scancode];
+        if (letter >= 65 && letter <= 90) {
+          letter += 32 * !uppercase; //Remove 32 from letter(make it lower case) if uppercase is false
+          special = 0;
         }
-      } else {
-      switch(*sc)
-      {
-        case 0x2A:
-          keys.shift = 1;
-          break;
-        case 0x36:
-          keys.shift = 1;
-          break;
-        default:
-          if (keys.shift)
-            curr_char = (keycode[*sc]-0x20);
-          else
-            curr_char = (keycode[*sc]);
+        else if (uppercase)
+        {
+          if (scancode < 0x10)
+          {
+            special = 0;
+            letter = sc_shift_below[scancode];
+          }
+          else if (scancode >= 0x27 && scancode <= 0x2B)
+          {
+            special = 0;
+            letter = sc_shift_middle[scancode - 0x27];
+          }
+          else if (scancode >= 0x33 && scancode <= 0x39)
+          {
+            special = 0;
+            letter = sc_shift_above[scancode - 0x33];
+          }
+        }
+        else if ((scancode >= 0x02 && scancode <= 0x0D) || (scancode >= 0x27 && scancode <= 0x29) ||
+             (scancode >= 0x33 && scancode <= 0x35) || scancode == 0x2B || scancode == 0x39) {
+          special = 0;
+        }
+        
+        if(special)
+        {
+          keyboard_handler_special(scancode);
+        }
+        else
+        {
+          keyboard_handler(letter);
+        }
+      }
     }
   }
-}
-
-char getch(void)
-{
-  curr_char = NULL;
-  while(!curr_char) printk("");
-  return curr_char;
+  UNUSED(regs);
 }
 
 void init_8042_keyboard(void)
 {
-    x86_register_interrupt_handler(1, keyboard_handler); /* IRQ1: Keyboard */
+    x86_register_interrupt_handler(1, keyboard_callback); /* IRQ1: Keyboard */
     printkok("Initialized PS2 (8042) Keyboard");
 }
