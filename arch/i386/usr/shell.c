@@ -147,7 +147,8 @@ int parse_command(char *linein) {
 void help(char *args)
 {
   UNUSED(args);
-  printk("Help\n");
+  printkc("Available commands:\n", LBLUE);
+  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\n");
 }
 
 void echo(char *args)
