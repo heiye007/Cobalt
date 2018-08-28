@@ -1,4 +1,5 @@
 #include <i386/gfx.h>
+#include <multiboot.h>
 
 #define VGA_AC_INDEX        0x3C0
 #define VGA_AC_WRITE        0x3C0
@@ -23,6 +24,9 @@
 #define VGA_NUM_AC_REGS     21
 
 extern unsigned char g_320x200x256[];
+extern unsigned char g_720x480x16[];
+int currline = 0;
+int x = 0;
 
 void vbe_write_regs(uint8_t* regs)
 {
@@ -159,29 +163,28 @@ void vbe_putchar(char c, int row, int col)
     vbe_drawchar(c, col * 8 + 8, row * 16 + 12, 0, 9);
 }
 
-uint32_t vbe_printk(char *message, uint32_t line)
+uint32_t vbe_printk(char *message)
 {
-    int x = 0;
     while(*message != 0)
     {
         if(*message == '\n')
         {
-            line++;
-            x = 0;
+            currline++;
+            x++;
             message++;
             continue;
         }
 
         if(x >= 320/8-1)
         {
-            line++;
+            currline++;
             x = 0;
         }
 
-        vbe_putchar(*message, line, x);
+        vbe_putchar(*message, currline, x);
         message++;
         x++;
     }
 
-    return line;
+    return currline;
 }

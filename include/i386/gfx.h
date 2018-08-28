@@ -15,4 +15,4 @@ void vbe_clear_screen(char c);
 void vbe_draw_rectangle(int startx, int starty, int endx, int endy, char c);
 void vbe_drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor);
 void vbe_putchar(char c, int row, int col);
-uint32_t vbe_printk(char *message, uint32_t line);
+uint32_t vbe_printk(char *message);
