@@ -99,13 +99,13 @@ void init_vbe(char *regs)
             vbe_write_regs(g_80x25_text);
         }
     } else if (!strcmp(regs, "") || !strcmp(regs, "help")) {
-        printk("Usage:\n");
+        printkc("Usage:\n", LBLUE);
         printk("vbe MODE\n");
-        printk("For available modes, use:\n");
+        printkc("For available modes, use:\n", LBLUE);
         printk("vbe modes\n");
-        printk("Example:\n");
+        printkc("Example:\n", LBLUE);
         printk("vbe 320x200x256\n");
     } else {
-        printk("VESA mode not found!\n");
+        printkc("VESA mode not found!\n", RED);
     }
 }
