@@ -134,6 +134,13 @@ void printkcenter(char* c)
     }
 }
 
+void printkc(char *text, int colour)
+{
+    settextcolor(colour, BLACK);
+    printk("%s", text);
+    settextcolor(WHITE, BLACK);
+}
+
 void printkok(char *text)
 {
     printk("%s", text);
