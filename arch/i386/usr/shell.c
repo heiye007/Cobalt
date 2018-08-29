@@ -252,6 +252,12 @@ void debug(char *args)
       
 }
 
+void ticks(char *args)
+{
+  UNUSED(args);
+  printk("%d\n", get_ticks());
+}
+
 void shell()
 {
   register_command("help", help);
@@ -262,6 +268,7 @@ void shell()
   register_command("pgf", pgf);
   register_command("cpuinfo", cpuinfo);
   register_command("debug", debug);
+  register_command("ticks", ticks);
   printk("$ ");
   while(1);
 }

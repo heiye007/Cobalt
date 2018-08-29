@@ -39,7 +39,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 		__asm__ __volatile__ ("hlt");
 		return;
 	}
-	
+
 	x86_initrd_start = *(uint32_t*)(mbi->mods_addr);
 	x86_initrd_end = *(uint32_t*)(mbi->mods_addr+4);
 	x86_initrd_size = x86_initrd_end - x86_initrd_start;
@@ -81,9 +81,9 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	init_a20();
 	init_gdt();
 	init_idt();
+	pit_init();
 	initialize_paging(x86_total_frames, 0, 0);
 	malloc_stats();
-	pit_init();
 	init_8042_keyboard();
 
  	if (mbi->mods_count > 0)
