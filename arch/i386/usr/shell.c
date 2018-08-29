@@ -174,7 +174,7 @@ void makepanic(char *args)
 
 void vbe(char *args)
 {
-  init_vbe(args);
+  x86_switch_screen_mode_command(args);
 }
 
 void pgf(char *args)

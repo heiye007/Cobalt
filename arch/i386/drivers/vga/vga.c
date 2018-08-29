@@ -223,7 +223,27 @@ void setup_text_mode(void)
     cls();
     update_cursor(0, 0);
     enable_cursor(14, 15);
-    update_mode_info(TEXT_80x25);
+    x86_update_screen_mode_info(TEXT_80x25);
+}
+
+void init_text_mode()
+{
+    x86_screen_write_regs(g_80x25_text);
+    uint8_t* vga_poke = (uint8_t*) 0x400;
+    vga_poke[0x4A] = 0x00;
+    vga_poke[0x4A+1] = 80;
+    vga_poke[0x4C] = 0x0f;
+    vga_poke[0x4C+1] = 0xa0;
+    vga_poke[0x50] = 0x00;
+    vga_poke[0x50+1] = 0x00;
+    vga_poke[0x60] = 15;
+    vga_poke[0x61] = 14;
+    vga_poke[0x84] = 24;
+    vga_poke[0x85] = 16;
+
+    /* cakeh: We still need to clear screen and
+       finish up last things */
+    setup_text_mode();
 }
 
 void printkint(const int number)
