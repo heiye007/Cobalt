@@ -1,6 +1,6 @@
 #include <i386/gfx.h>
 #include <i386/vga.h>
-
+#include <string.h>
 
 unsigned char g_80x25_text[] =
 {

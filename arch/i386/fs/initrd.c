@@ -1,4 +1,5 @@
 #include <i386/initrd.h>
+#include <i386/vga.h>
 #include <stdbool.h>
 
 initrd_header_t *initrd_header;     // The header.

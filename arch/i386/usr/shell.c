@@ -7,6 +7,30 @@
 #include <string.h>
 #include <stdint.h>
 
+char *commands[255]; //Should be plenty, at least for now.
+void (*cmd_handlers[255])(char *);
+uint8_t cmd_index = 0;
+char cmd_history[50][512];
+uint8_t cmd_his_len = 0;
+char key_buffer[512];
+void (*ext_handler)(char key);
+void (*special_handler)(enum SPECIAL key);
+uint8_t cmd_his_index = 0;
+
+int parse_command(char *linein) {
+  for(int i = 0; i < cmd_index; i++) {
+    char cmd[256] = "";
+    char args[256] = "";
+    strsplit(linein, ' ', cmd, args);
+    tolowercase(cmd);
+    if(strcmp(cmd, commands[i]) == 0) {
+      cmd_handlers[i](args);
+      return 1;
+    }
+  }
+  return 0;
+}
+
 void delete_last()
 {
   update_cursor(get_row()-1, get_col());
@@ -18,12 +42,6 @@ void backspace(char s[]) {
   int len = strlen(s);
   s[len-1] = '\0';
 }
-
-char cmd_history[50][512];
-uint8_t cmd_his_len = 0;
-char key_buffer[512];
-void (*ext_handler)(char key);
-void (*special_handler)(enum SPECIAL key);
 
 void register_keyboard_handler(void (*handler)(char key), void(*special)(enum SPECIAL key))
 {
@@ -50,8 +68,6 @@ void keyboard_handler(char key)
     ext_handler(key);
   }
 }
-
-uint8_t cmd_his_index = 0;
 
 void goto_cmd_history()
 {
@@ -121,27 +137,12 @@ void keyboard_handler_special(enum SPECIAL key) {
     special_handler(key);
   }
 }
-char *commands[255]; //Should be plenty, at least for now.
-void (*cmd_handlers[255])(char *);
-uint8_t cmd_index = 0;
+
 void register_command(char *cmd, void (*handler)(char *)) {
   tolowercase(cmd);
   cmd_handlers[cmd_index] = handler;
   commands[cmd_index] = cmd;
   cmd_index++;
-}
-int parse_command(char *linein) {
-  for(int i = 0; i < cmd_index; i++) {
-    char cmd[256] = "";
-    char args[256] = "";
-    strsplit(linein, ' ', cmd, args);
-    tolowercase(cmd);
-    if(strcmp(cmd, commands[i]) == 0) {
-      cmd_handlers[i](args);
-      return 1;
-    }
-  }
-  return 0;
 }
 
 void help(char *args)
@@ -164,10 +165,11 @@ void clear(char *args)
 
 void makepanic(char *args)
 {
-      int a = 10;
-      int b = 0;
-      int c = a/b;
-      printk("%d", c);
+  UNUSED(args);
+  int a = 10;
+  int b = 0;
+  int c = a/b;
+  printk("%d", c);
 }
 
 void vbe(char *args)
@@ -177,6 +179,7 @@ void vbe(char *args)
 
 void pgf(char *args)
 {
+  UNUSED(args);
   unsigned int *ptr = (unsigned int*)0xA0000000;
   unsigned int do_page_fault = *ptr;
   *ptr = NULL;
@@ -186,6 +189,7 @@ void pgf(char *args)
 
 void cpuinfo(char *args)
 {
+  UNUSED(args);
   getCPUVendor();
   getCPUFeatures();
   getCPUArch();
@@ -194,6 +198,7 @@ void cpuinfo(char *args)
 
 void debug(char *args)
 {
+  UNUSED(args);
       extern uint32_t x86_memoryhead, x86_memoryend, x86_total_bytes, x86_free_bytes, x86_byte_allocations, x86_initial_esp, x86_kernel_end, x86_kernel_start, x86_initrd_size, x86_initrd_start, x86_initrd_end;
       extern uint32_t x86_ramsize, x86_kernel_size, x86_kernel_iss, x86_kernel_ise, x86_kernel_isi, x86_ramstart, x86_memory_end_location, x86_memory_amount, x86_memory_location, x86_usable_mem, x86_total_frames;
       printk("Total frames: %d\n", x86_total_frames);

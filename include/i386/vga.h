@@ -41,3 +41,4 @@ void printkdec(uint16_t n);
 void printkhex(const uint16_t number);
 void printkuint(const uint16_t number);
 void printk(char* fmt, ...);
+void printkc(char *text, int colour);
