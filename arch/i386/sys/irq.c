@@ -56,7 +56,7 @@ void x86_irq_handler(struct regs *r)
 
     if (r->int_no >= 32)
     {
-        char irq = r->int_no - 32;
+        unsigned char irq = r->int_no - 32;
         pic_send_eoi(irq);
     }
 }
