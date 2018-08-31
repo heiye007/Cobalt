@@ -17,7 +17,7 @@ void pic_remap(void)
     outb(PIC_SLAVE_DATA, 0x0);
 }
 
-void pic_send_eoi(char irq)
+void pic_send_eoi(unsigned char irq)
 {
     if(irq >= 8)
         outb(PIC_SLAVE_CMD, PIC_CMD_EOI);

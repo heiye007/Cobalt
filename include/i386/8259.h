@@ -6,4 +6,4 @@
 #define PIC_SLAVE_DATA 0xA1
 #define PIC_CMD_EOI 0x20
 
-void pic_send_eoi(char irq);
+void pic_send_eoi(unsigned char irq);
