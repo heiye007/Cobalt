@@ -54,10 +54,9 @@ void x86_irq_handler(struct regs *r)
         handler(r);
     }
 
-    if (r->int_no >= 40)
+    if (r->int_no >= 32)
     {
-        outb(0xA0, 0x20);
+        char irq = r->int_no - 32;
+        pic_send_eoi(irq);
     }
-
-    outb(0x20, 0x20);
 }

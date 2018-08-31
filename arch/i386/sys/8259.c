@@ -17,9 +17,10 @@ void pic_remap(void)
     outb(PIC_SLAVE_DATA, 0x0);
 }
 
-void pic_send_eoi(uint8_t irq)
+void pic_send_eoi(char irq)
 {
     if(irq >= 8)
         outb(PIC_SLAVE_CMD, PIC_CMD_EOI);
+
     outb(PIC_MASTER_CMD, PIC_CMD_EOI);
 }
