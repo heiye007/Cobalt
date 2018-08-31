@@ -9,14 +9,14 @@ void *irq_routines[16] =
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void x86_register_interrupt_handler(char n, void (*handler))
+void x86_register_interrupt_handler(unsigned char n, void (*handler))
 {
 	__asm__ __volatile__ ("cli");
     irq_routines[n] = handler;
 	__asm__ __volatile__ ("sti");
 }
 
-void x86_unregister_interrupt_handler(char n)
+void x86_unregister_interrupt_handler(unsigned char n)
 {
 	__asm__ __volatile__ ("cli");
     irq_routines[n] = 0;
