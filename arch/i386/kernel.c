@@ -56,7 +56,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 
 		printk("0x%x - 0x%x | %s\n", addr, addr + len, mem_type_names[mmap->type]);
 		
-		if(mmap->type == 1 && mmap->len > 0x100000)
+		if(mmap->type == MULTIBOOT_MEMORY_AVAILABLE && mmap->len > 0x100000)
 		{
 			x86_memory_location = mmap->addr;
 			x86_memory_amount = mmap->len;
