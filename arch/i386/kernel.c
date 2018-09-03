@@ -28,10 +28,12 @@ int x86_memory_amount, x86_usable_mem;
 
 #define ROUNDUP(x, y) (x % y ? x + (y - (x % y)) : x)
 
+multiboot_info_t *mb;
+
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
 	x86_initial_esp = initial_boot_stack;
-
+	*mb = *mbi;
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
 	{
 		__asm__ __volatile__ ("cli");

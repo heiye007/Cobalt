@@ -149,7 +149,7 @@ void help(char *args)
 {
   UNUSED(args);
   printkc("Available commands:\n", LBLUE);
-  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\nticks\npci\n");
+  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\nticks\npci\nmmap\n");
 }
 
 void echo(char *args)
@@ -264,6 +264,13 @@ void pci(char *args)
   pci_scan();
 }
 
+void mmap(char *args)
+{
+  UNUSED(args);
+  extern multiboot_info_t *mb;
+  get_memory_map(mb);
+}
+
 void shell()
 {
   register_command("help", help);
@@ -276,6 +283,7 @@ void shell()
   register_command("debug", debug);
   register_command("ticks", ticks);
   register_command("pci", pci);
+  register_command("mmap", mmap);
   printk("$ ");
   while(1);
 }
