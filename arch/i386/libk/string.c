@@ -20,19 +20,25 @@ size_t strlen(const char *s)
   return s - ptr;
 }
 
+extern char sse_enabled;
 /* Simple function to copy a memory block from source to destination */
 // UNIX Compatible
 void *memcpy(void *dest, const void *src, size_t n)
 {
-  uint8_t *d = dest;
-  const uint8_t *s = src;
-
-  while(n--)
+  if (sse_enabled == 1)
   {
-    *d++ = *s++;
-  }
+    sse_memcpy(dest, src, n);
+  } else {
+    uint8_t *d = dest;
+    const uint8_t *s = src;
 
-  return dest;
+    while(n--)
+    {
+      *d++ = *s++;
+    }
+
+    return dest;
+  }
 }
 
 /* Simple function to copies characters to a defined location */
