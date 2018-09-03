@@ -82,6 +82,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	init_a20();	
 	init_gdt();
 	init_idt();
+	setup_sse();
 	pit_init();
 	initialize_paging(x86_total_frames, 0, 0);
 	malloc_stats();
