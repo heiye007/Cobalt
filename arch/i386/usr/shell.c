@@ -149,7 +149,7 @@ void help(char *args)
 {
   UNUSED(args);
   printkc("Available commands:\n", LBLUE);
-  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\n");
+  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\nticks\npci\n");
 }
 
 void echo(char *args)
@@ -258,6 +258,12 @@ void ticks(char *args)
   printk("%d\n", get_ticks());
 }
 
+void pci(char *args)
+{
+  UNUSED(args);
+  pci_scan();
+}
+
 void shell()
 {
   register_command("help", help);
@@ -269,6 +275,7 @@ void shell()
   register_command("cpuinfo", cpuinfo);
   register_command("debug", debug);
   register_command("ticks", ticks);
+  register_command("pci", pci);
   printk("$ ");
   while(1);
 }
