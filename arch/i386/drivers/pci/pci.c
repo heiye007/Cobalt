@@ -142,10 +142,10 @@ uint16_t pci_get_device_subclass_id(uint16_t bus, uint16_t slot, uint16_t func) 
 }
 
 /**
- * Initialize PCI device array and such
+ * Scan PCI device array
  */
-void pci_init() {
-    printk("Scanning for PCI devices.\n");
+void pci_scan() {
+    printk("Scanning for PCI devices...\n");
     pci_probe();
 }
 
@@ -157,7 +157,7 @@ void pci_probe() {
         for (uint16_t slot = 0; slot < 32; slot++) {
             for(uint16_t function = 0; function < 8; function++) {
                 if(pci_devices_size > 15) {
-                    printk("[pci] not adding above device... limit reached\n");
+                    printk("[PCI] Not adding above device... limit reached\n");
                     return;
                 }
 
@@ -165,7 +165,7 @@ void pci_probe() {
                 if(vendor_id == 0xFFFF) continue;
                 uint16_t device_id = pci_get_device_id(bus, slot, function);
                 uint16_t class_id = pci_get_device_class_id(bus, slot, function);
-                printk("[pci] 0x%x:0x%x - %s\n", vendor_id, device_id, PCI_CLASS_IDS[class_id]);
+                printk("[PCI] 0x%x:0x%x - %s\n", vendor_id, device_id, PCI_CLASS_IDS[class_id]);
 
                 // Add current device to local pci_devices array
                 pci_devices[pci_devices_size].vendor = vendor_id;
