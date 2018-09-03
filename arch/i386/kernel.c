@@ -80,7 +80,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 	pit_init();
 	initialize_paging(x86_total_frames, 0, 0);
 	malloc_stats();
-	pci_init();
 	init_8042_keyboard();
 
  	if (mbi->mods_count > 0)
