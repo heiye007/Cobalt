@@ -40,13 +40,10 @@ int a20_enable_ps2()
 
 void init_a20()
 {
-    uint32_t a20;
-    a20 = check_a20();
-
-    if (a20)
+    if (check_a20() != 1)
     {
         a20_enable_bios();
-        if (check_a20())
+        if (check_a20() == 1)
         {
             printkok("Initialized A20 Line using BIOS");
             return;
@@ -54,7 +51,7 @@ void init_a20()
         else
         {
             a20_enable_ps2();
-            if (check_a20())
+            if (check_a20() == 1)
             {
                 printkok("Initialized A20 Line using PS2 Controller");
                 return;
@@ -62,7 +59,7 @@ void init_a20()
             else
             {
                 a20_enable_fast();
-                if (check_a20())
+                if (check_a20() == 1)
                 {
                     printkok("Initialized A20 Line using Fast Gate");
                     return;
@@ -73,5 +70,7 @@ void init_a20()
                 }
             }
         }
+    } else {
+        printkok("A20 Line Already Initialized");
     }
 }

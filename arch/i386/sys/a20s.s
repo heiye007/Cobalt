@@ -22,57 +22,17 @@ _a20_enable_bios_fail:
 .global check_a20
 .type check_a20, @function
 check_a20:
-    cli # Disable interrupts
-    push %ebx
-    push %ecx
-    push %edx
-
-    call wait_input
-    mov $0xAD, %al 
-    outb %al, $0x64
-
-    call wait_input
-    mov $0xD0, %al
-    out %al, $0x64
-
-    call wait_output
-    inb $0x60, %al
-    push %eax
-
-    call wait_input
-    mov $0xd1, %al
-    outb %al, $0x64
-
-    call wait_input
-    pop %eax
-    or $2, %al
-    out %al, $0x60
-
-    call wait_input
-    mov $0xae, %al
-    out %al, $0x64
-
-    call wait_input
-    
-    pop %eax
-    pop %edx
-    pop %ecx
-    pop %ebx
-    sti # Enable interrupts
+    pusha
+    mov $0x112345, %edi
+    mov $0x12345, %esi
+    mov %esi,(%esi)
+    mov %edi,(%edi)
+    cmpsl %es:(%edi), %ds:(%esi)
+    popa
+    jne _return_a20_code
+    xor %eax, %eax
     ret
 
-.global wait_input
-.type wait_input, @function
-wait_input:
-    inb $0x64, %al
-    test $2, %al
-    jnz wait_input
-    ret
-
-.global wait_output
-.type wait_output, @function
-wait_output:
-    inb $0x64, %al
-    test $1, %al
-    jz wait_output
+_return_a20_code:
+    mov $0x1,%eax
     ret
