@@ -24,7 +24,6 @@ extern uint32_t x86_kernel_start, x86_kernel_end, x86_placement_address, x86_ker
 uint32_t x86_ramsize, x86_initial_esp, x86_initrd_size, x86_initrd_start, x86_initrd_end;
 uint32_t x86_memory_location, x86_ramstart, x86_memory_end_location, x86_total_frames;
 bool modules_exist = false;
-const char* mem_type_names[] = {"", "Available", "Reserved", "ACPI", "NVS", "Bad RAM"};
 int x86_memory_amount, x86_usable_mem;
 
 #define ROUNDUP(x, y) (x % y ? x + (y - (x % y)) : x)
@@ -51,11 +50,6 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
 
     while(mmap < mbi->mmap_addr + mbi->mmap_length)
     {
-       	uint32_t addr = (uint32_t)mmap->addr;
-		uint32_t len = (uint32_t)mmap->len;
-
-		printk("0x%x - 0x%x | %s\n", addr, addr + len, mem_type_names[mmap->type]);
-		
 		if(mmap->type == MULTIBOOT_MEMORY_AVAILABLE && mmap->len > 0x100000)
 		{
 			x86_memory_location = mmap->addr;
