@@ -78,7 +78,9 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
     
     x86_total_frames = x86_usable_mem / 0x1000;
 
+    // FIXME: Bochs Hangs on Enabling A20 Gate Function!
 	init_a20();
+	
 	init_gdt();
 	init_idt();
 	pit_init();
