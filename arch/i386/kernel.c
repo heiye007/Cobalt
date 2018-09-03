@@ -72,7 +72,7 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
     x86_usable_mem = x86_memory_end_location - x86_memory_location;
     
     // Second method for getting total usable memory
-    //			  Bytes            KiB    MiB
+    //			  Bytes             KiB    MiB
     // We add up 2 MiB to round up the memory calculation
     x86_ramsize = (x86_usable_mem / 1024 / 1024) + 2;
     
