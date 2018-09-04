@@ -15,6 +15,7 @@
 #include <i386/gfx.h>
 #include <i386/fs.h>
 #include <i386/initrd.h>
+#include <i386/elf.h>
 #include <multiboot.h>
 #include <stdbool.h>
 
@@ -29,6 +30,7 @@ int x86_memory_amount, x86_usable_mem;
 #define ROUNDUP(x, y) (x % y ? x + (y - (x % y)) : x)
 
 multiboot_info_t *mb;
+elf_t kernel_elf;
 
 void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_stack)
 {
@@ -73,6 +75,8 @@ void init(unsigned long magic, multiboot_info_t *mbi, unsigned int initial_boot_
     x86_ramsize = (x86_usable_mem / 1024 / 1024) + 2;
     
     x86_total_frames = x86_usable_mem / 0x1000;
+
+    kernel_elf = elf_from_multiboot(mbi);
 
     // GRUB enables A20 for us
 	init_a20();	
