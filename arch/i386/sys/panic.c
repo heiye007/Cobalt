@@ -2,6 +2,7 @@
 #include <i386/isr.h>
 #include <i386/regs.h>
 #include <i386/panic.h>
+#include <i386/elf.h>
 #include <stdint.h>
 
 void x86_division_by_zero(struct regs *r)
@@ -51,6 +52,27 @@ void x86_unhandled_exception(struct regs *r)
 	PANIC(x86_exception_messages[r->int_no]);
 }
 
+extern elf_t kernel_elf;
+
+void print_stack_trace()
+{
+  uint32_t *ebp, *eip;
+  uint32_t count = 0;
+
+  __asm__ __volatile__ ("mov %%ebp, %0" : "=r" (ebp));
+
+  while (ebp) {
+    if (count > 15)
+		return;
+
+    eip = ebp+1;
+    printk ("     %d 0x%x %s\n", count, *eip,
+		elf_lookup_symbol (*eip, &kernel_elf));
+    ebp = (uint32_t*) *ebp;
+    count++;
+  }
+}
+
 void x86_panic(const char* err)
 {
 	struct regs *r;
@@ -67,7 +89,9 @@ void x86_panic(const char* err)
 	printk("  EDI: 0x%x", r->edi);
 	printk("  EBP: 0x%x", r->ebp);
 	printk("  ESP: 0x%x", r->esp);
-	printk("\n     Reason: %s", err);
+	printk("\n     Reason: %s\n", err);
+	printk("\n     Stack trace:\n");
+	print_stack_trace();
 	__asm__ __volatile__ ("cli");
 	__asm__ __volatile__ ("hlt");
 	for (;;);
