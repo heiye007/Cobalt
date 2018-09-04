@@ -25,7 +25,7 @@ optramimage1: file=none
 optramimage2: file=none
 optramimage3: file=none
 optramimage4: file=none
-pci: enabled=1, chipset=i440fx
+pci: enabled=1, chipset=i440fx, slot1=cirrus, slot2=e1000, slot3=usb_ohci, slot4=usb_ehci, slot5=usb_xhci
 vga: extension=vbe, update_freq=5, realtime=1
 cpu: count=1, ips=4000000, model=bx_generic, reset_on_triple_fault=0, cpuid_limit_winnt=0, ignore_bad_msrs=1, mwait_is_nop=0
 cpuid: level=6, stepping=3, model=3, family=6, vendor_string="GenuineIntel", brand_string="              Intel(R) Pentium(R) 4 CPU        "
@@ -38,6 +38,8 @@ private_colormap: enabled=0
 clock: sync=realtime, time0=local, rtc_sync=1
 # no cmosimage
 # no loader
+log: -
+logprefix: %t%e%d
 debug: action=ignore
 info: action=ignore
 error: action=report
