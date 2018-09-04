@@ -1,4 +1,4 @@
-#include <multibooy.h>
+#include <multiboot.h>
 #include <stdint.h>
 
 #define ELF32_ST_TYPE(i) ((i)&0xf)
