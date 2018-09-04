@@ -3,6 +3,7 @@
 #include <i386/kheap.h>
 #include <i386/gfx.h>
 #include <i386/8042.h>
+#include <i386/panic.h>
 #include <multiboot.h>
 #include <string.h>
 #include <stdint.h>
@@ -149,7 +150,7 @@ void help(char *args)
 {
   UNUSED(args);
   printkc("Available commands:\n", LBLUE);
-  printk("echo\nclear\npanic\nvbe\npgf\ncpuinfo\ndebug\nticks\npci\nmmap\n");
+  printk("echo\nclear\npanic\nvbe\ncpuinfo\ndebug\nticks\npci\nmmap\n");
 }
 
 void echo(char *args)
@@ -165,26 +166,33 @@ void clear(char *args)
 
 void makepanic(char *args)
 {
-  UNUSED(args);
-  int a = 10;
-  int b = 0;
-  int c = a/b;
-  printk("%d", c);
+  if (!strcmp(args, "divisionbyzero"))
+  {
+    int a = 10;
+    int b = 0;
+    int c = a/b;
+    printk("%d", c);
+  } else if (!strcmp(args, "normal")) {
+    PANIC("Called from shell!");
+  } else if (!strcmp(args, "pagefault")) {
+    unsigned int *ptr = (unsigned int*) 0xA0000000;
+    unsigned int do_page_fault = *ptr;
+    *ptr = NULL;
+    do_page_fault = NULL;
+    kmalloc(*ptr + do_page_fault);
+  } else if (!strcmp(args, "help")) {
+    printkc("Usage:\n", LBLUE);
+    printk("panic MODE\n");
+    printkc("Available modes:\n", LBLUE);
+    printk("pagefault\n");
+    printk("divisionbyzero\n");
+    printk("normal\n");
+  }
 }
 
 void vbe(char *args)
 {
   x86_switch_screen_mode_command(args);
-}
-
-void pgf(char *args)
-{
-  UNUSED(args);
-  unsigned int *ptr = (unsigned int*)0xA0000000;
-  unsigned int do_page_fault = *ptr;
-  *ptr = NULL;
-  do_page_fault = NULL;
-  kmalloc(*ptr + do_page_fault);
 }
 
 void cpuinfo(char *args)
@@ -278,7 +286,6 @@ void shell()
   register_command("clear", clear);
   register_command("panic", makepanic);
   register_command("vbe", vbe);
-  register_command("pgf", pgf);
   register_command("cpuinfo", cpuinfo);
   register_command("debug", debug);
   register_command("ticks", ticks);
