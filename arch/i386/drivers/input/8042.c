@@ -103,8 +103,24 @@ static void keyboard_callback(registers_t regs) {
   UNUSED(regs);
 }
 
-void init_8042_keyboard(void)
+void ps2_flush_buffer()
+{
+	inb(0x60); 
+	inb(0x60); 
+	inb(0x60); 
+	inb(0x60);
+}
+
+char init_8042_keyboard()
 {
     x86_register_interrupt_handler(1, keyboard_callback); /* IRQ1: Keyboard */
+	
+	while (inb(0x64) & 1) // Clear Keyboard Buffer
+	{
+		inb(0x60);
+	}
+
     printkok("Initialized PS2 (8042) Keyboard");
+    
+	return 0;
 }

@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-void init_8042_keyboard(void);
+char init_8042_keyboard();
 #define UNUSED(x) (void)(x)
 
 
